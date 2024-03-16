@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
@@ -13,8 +14,13 @@ class GameActivity : AppCompatActivity() {
         setContentView(R.layout.activity_game)
 
         val diceImageView = findViewById<ImageView>(R.id.diceImageView)
+        val diceImageView2 = findViewById<ImageView>(R.id.diceImageView2)
+        val onRollBtn = findViewById<Button>(R.id.btn_tirada)
+        onRollBtn.setOnClickListener{
+            animateDiceRoll(diceImageView)
+            animateDiceRoll(diceImageView2)
+        }
 
-        animateDiceRoll(diceImageView)
     }
 
     private fun animateDiceRoll(diceImageView: ImageView) {
@@ -38,10 +44,5 @@ class GameActivity : AppCompatActivity() {
         }
 
         rotationAnimator.start()
-    }
-
-    fun onDiceClick(view: View) {
-        val diceImageView: ImageView = findViewById(R.id.diceImageView)
-        animateDiceRoll(diceImageView)
     }
 }
