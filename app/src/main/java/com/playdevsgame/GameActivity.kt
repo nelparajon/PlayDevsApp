@@ -75,7 +75,7 @@ class GameActivity : AppCompatActivity() {
             } */
             R.id.action_options -> {
                 // Inicia la Activity de opciones
-                val intent = Intent(this, OptionsActivity::class.java)
+                val intent = Intent(this, SettingsActivity::class.java)
                 startActivity(intent)
                 return true
             }

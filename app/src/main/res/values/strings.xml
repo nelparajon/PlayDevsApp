@@ -2,4 +2,18 @@
     <string name="app_name">PlayDevsGame</string>
     <string name="btn_play">PLAY</string>
     <string name="btn_tirada">TIRAR</string>
+    <string name="title_activity_settings" />
+    <string name="dado_1_description" />
+    <string name="dado_2_description" />
+    <string name="dado_3_description" />
+    <string name="btn_par" />
+    <string name="par_button_text" />
+    <string name="btn_impar" />
+    <string name="impar_button_text" />
+    <string name="score" />
+    <string name="contador" />
+    <string name="remaining_rolls_text" />
+    <string name="player" />
+    <string name="logo_description" />
+    <string name="settings" />
 </resources>
