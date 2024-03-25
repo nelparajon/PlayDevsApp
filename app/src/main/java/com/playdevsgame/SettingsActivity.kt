@@ -5,6 +5,8 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import android.app.AlertDialog
+import androidx.core.text.HtmlCompat
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -30,8 +32,29 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
+        val buttonShowInstructions = findViewById<Button>(R.id.instructionsButton)
+        buttonShowInstructions.setOnClickListener {
+            showInstructionsDialog()
+        }
+
         backButton.setOnClickListener {
             onBackPressed()
         }
     }
+    private fun showInstructionsDialog() {
+        val instructions = "<font color='#000000'><big>1. El jugador cuenta con 10 tiradas de dados para conseguir obtener la puntuación más alta posible.</big></font><br/>" +
+                "<font color='#000000'><big>2. Se empieza el juego con 0 puntos y en cada tirada se debe adivinar si el resultado de los dados será par o impar.</big></font><br/>" +
+                "<font color='#000000'><big>3. Si se acierta el resultado, se otorgan 10 puntos. Fallar no conlleva pérdida de puntos.</big></font>"
+
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setTitle(HtmlCompat.fromHtml("<big>Instrucciones del Juego</big>", HtmlCompat.FROM_HTML_MODE_LEGACY))
+        alertDialogBuilder.setMessage(HtmlCompat.fromHtml(instructions, HtmlCompat.FROM_HTML_MODE_LEGACY))
+        alertDialogBuilder.setPositiveButton("Aceptar") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
 }

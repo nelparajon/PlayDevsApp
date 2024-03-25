@@ -34,7 +34,7 @@
             app:layout_constraintHorizontal_bias="0.708"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.553" />
+            app:layout_constraintVertical_bias="0.55" />
 
         <TextView
             android:id="@+id/sfTextView"
@@ -105,8 +105,8 @@
         <EditText
             android:id="@+id/playerNameEditText"
             style="@style/PlayBtn"
-            android:layout_width="217dp"
-            android:layout_height="66dp"
+            android:layout_width="187dp"
+            android:layout_height="82dp"
             android:hint="Nombre del jugador"
             android:inputType="text"
             android:textSize="24sp"
@@ -129,19 +129,19 @@
             app:layout_constraintHorizontal_bias="0.708"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.352" />
+            app:layout_constraintVertical_bias="0.349" />
 
         <SeekBar
             android:id="@+id/volumeSeekBar"
             style="@style/PlayBtn"
-            android:layout_width="216dp"
-            android:layout_height="39dp"
+            android:layout_width="215dp"
+            android:layout_height="42dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.794"
+            app:layout_constraintHorizontal_bias="0.867"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.452" />
+            app:layout_constraintVertical_bias="0.454" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
