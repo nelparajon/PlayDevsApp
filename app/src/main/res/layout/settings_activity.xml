@@ -10,6 +10,72 @@
         android:layout_height="match_parent">
 
         <Button
+            android:id="@+id/instructionsButton"
+            style="@style/PlayBtn"
+            android:layout_width="335dp"
+            android:layout_height="57dp"
+            android:onClick="onInstructionsClick"
+            android:text="Instrucciones del juego"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.674" />
+
+        <CheckBox
+            android:id="@+id/efectosCheckBox"
+            style="@style/PlayBtn"
+            android:layout_width="140dp"
+            android:layout_height="41dp"
+            android:text="Activado"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.708"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.553" />
+
+        <TextView
+            android:id="@+id/sfTextView"
+            style="@style/PlayBtn"
+            android:layout_width="104dp"
+            android:layout_height="39dp"
+            android:text="Efectos"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.133"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.552" />
+
+        <TextView
+            android:id="@+id/volumenTextView"
+            style="@style/PlayBtn"
+            android:layout_width="104dp"
+            android:layout_height="39dp"
+            android:text="Volumen"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.133"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.452" />
+
+        <TextView
+            android:id="@+id/musicaTextView"
+            style="@style/PlayBtn"
+            android:layout_width="104dp"
+            android:layout_height="39dp"
+            android:text="Música"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.133"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.351" />
+
+        <Button
             android:id="@+id/backButton"
             style="@style/PlayBtn"
             android:layout_width="200dp"
@@ -21,7 +87,7 @@
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.831" />
+            app:layout_constraintVertical_bias="0.851" />
 
         <TextView
             android:id="@+id/playerNameTextView"
@@ -41,14 +107,41 @@
             style="@style/PlayBtn"
             android:layout_width="217dp"
             android:layout_height="66dp"
-            android:hint="Escribe el nombre del jugador"
+            android:hint="Nombre del jugador"
             android:inputType="text"
+            android:textSize="24sp"
+            android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.798"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.195" />
+
+        <CheckBox
+            android:id="@+id/musicCheckBox"
+            style="@style/PlayBtn"
+            android:layout_width="140dp"
+            android:layout_height="41dp"
+            android:text="Activado"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.708"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.352" />
+
+        <SeekBar
+            android:id="@+id/volumeSeekBar"
+            style="@style/PlayBtn"
+            android:layout_width="216dp"
+            android:layout_height="39dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.794"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.452" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
