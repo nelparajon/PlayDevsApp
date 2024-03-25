@@ -47,7 +47,7 @@ class GameActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar2)
         setSupportActionBar(toolbar)
 
-        // Habilitar el botón de "volver" en la ActionBar, si es necesario
+        // Habilitar el botón de "volver" en la ActionBar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_home_24)
 
