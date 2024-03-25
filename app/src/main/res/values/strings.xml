@@ -1,22 +1,5 @@
 <resources>
     <string name="app_name">PlayDevsGame</string>
     <string name="btn_play">PLAY</string>
-    <string name="dado_1_description">Dado número 1</string>
-    <string name="dado_2_description">Dado número 2</string>
-    <string name="dado_3_description">Dado número 3</string>
-    <string name="score">score</string>
-    <string name="btn_par">btn_par</string>
-    <string name="btn_impar">btn_impar</string>
-    <string name="txtTiradasRestantes">contador</string>
-    <string name="par_button_text">Par</string>
-    <string name="impar_button_text">Impar</string>
-    <string name="default_player_name">Player</string>
-    <string name="remaining_rolls_text">Tiradas restantes: 10</string>
-    <string name="contador">contador</string>
-    <string name="player">Player</string>
-    <string name="logo_description">Logo de Play Devs</string>
-    <string name="settings">Configuración</string>
-
-
-
+    <string name="btn_tirada">TIRAR</string>
 </resources>
