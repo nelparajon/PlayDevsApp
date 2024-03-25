@@ -20,7 +20,7 @@ class GameActivity : AppCompatActivity() {
     private var clickCount = 0
     private val totalRolls = 10 //10 tiradas iniciales
     private val DISABLED_BUTNS_DURATION: Long = 1000
-    private val SHOW_TEXT: Long = 900
+    private val SHOW_TEXT: Long = 1200
     private lateinit var  diceImageView: ImageView
     private lateinit var  diceImageView2: ImageView
     private lateinit var  diceImageView3: ImageView
@@ -40,8 +40,6 @@ class GameActivity : AppCompatActivity() {
 
         var textViewPar = findViewById<TextView>(R.id.parText)
         var textViewImpar = findViewById<TextView>(R.id.imparText)
-
-
 
         onRollBtnPar.setOnClickListener {
             if (clickCount < 10) {
@@ -70,7 +68,6 @@ class GameActivity : AppCompatActivity() {
 
                 updateRollsRemaining(totalRolls, clickCount, viewRollsText)
 
-
                 //bucle que pasa a la siguiente activity(pantalla puntuación) cuando se acabe el contador de clics
                 /* if(clickCount == 10){
                     openScoreActivity(updateScore)
@@ -98,10 +95,7 @@ class GameActivity : AppCompatActivity() {
         updateUIScore(success)
         //retrasamos la activación de los dados durante 0,9 segundos
         activateBtns()
-
     }
-
-
 
     private fun onClicImparBtn(){
         disabledBtns()
@@ -139,10 +133,7 @@ class GameActivity : AppCompatActivity() {
             onRollBtnPar.isEnabled = true
             onRollBtnImpar.isEnabled = true
         }, DISABLED_BUTNS_DURATION)
-
-
     }
-
 
     //función donde inicializamos todas las vistas y sus valores iniciales(si existiesen)
     private fun initializateViews(){
@@ -216,11 +207,7 @@ class GameActivity : AppCompatActivity() {
         }, SHOW_TEXT)
 
     }
-
-
     /**/
-
-
     //función que calcula la puntuación del jugador en base al acierto
     private fun scoreSuccess(success: Boolean, textView: TextView): Int {
         Log.d("TAG", "Entrando en scoreSuccess")
@@ -260,11 +247,9 @@ class GameActivity : AppCompatActivity() {
         //intent.putExtra("score", updateScore)
         //startActivity(intent)
         //finish()
-
         Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT)
 
     }
-
 }
 
 
