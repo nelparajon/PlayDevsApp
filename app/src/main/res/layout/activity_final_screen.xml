@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:padding="50dp"
+    android:background="#7d14f5">
+
+    <ImageView
+        android:id="@+id/diceImageView"
+        android:layout_width="290dp"
+        android:layout_height="338dp"
+        android:background="@drawable/play_devs_logo_proto"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="20dp"
+        tools:layout_editor_absoluteY="-30dp" />
+
+
+
+    <!-- Botón Nueva Partida -->
+    <Button
+        android:id="@+id/newGameButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="Nueva Partida"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/diceImageView" />
+
+
+    <!-- Botón Puntuación Actual -->
+    <Button
+        android:id="@+id/currentScoreButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="Puntuación Actual"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/newGameButton" />
+
+
+
+    <!-- Botón Récord -->
+    <Button
+        android:id="@+id/highScoreButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Récord"
+        app:layout_constraintTop_toBottomOf="@id/currentScoreButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginTop="36dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
