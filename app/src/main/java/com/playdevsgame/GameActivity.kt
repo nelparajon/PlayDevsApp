@@ -1,6 +1,7 @@
 package com.playdevsgame
 
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -173,12 +174,22 @@ class GameActivity : AppCompatActivity() {
     }
 
 
+
     private fun endGame() {
         // Aquí se iniciará la actividad de final de partida
         // Por ahora, simplemente imprimimos un mensaje
         Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT).show()
+
+
+        val intent = Intent(this@GameActivity, FinalScreenActivity::class.java)
+        intent.putExtra("EXTRA_SCORE", score) // score como variable
+        startActivity(intent)
+        finish()// Si se quiere finalizar GameActivity
+
     }
-}
+
+    }
+
 
 
 

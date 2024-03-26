@@ -4,8 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import  android.widget.Toast
+
+
 
 class FinalScreenActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_final_screen)
@@ -19,11 +23,22 @@ class FinalScreenActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val score = intent.getIntExtra("EXTRA_SCORE", 0) // 0 es el valor por defecto
+
+
         // Configura el botón de Puntuación Actual
         val currentScoreButton = findViewById<Button>(R.id.currentScoreButton)
         currentScoreButton.setOnClickListener {
-            // Aquí es donde colocarías el código para mostrar la puntuación actual
+            // Mostrar un Toast con la puntuación actual
+            Toast.makeText(this, "Puntuación actual: $score", Toast.LENGTH_SHORT).show()
+
+
+
+
+
+
         }
+
 
         // Configura el botón de Récord
         val highScoreButton = findViewById<Button>(R.id.highScoreButton)
