@@ -29,21 +29,16 @@ class FinalScreenActivity : AppCompatActivity() {
         // Configura el botón de Puntuación Actual
         val currentScoreButton = findViewById<Button>(R.id.currentScoreButton)
         currentScoreButton.setOnClickListener {
-            // Mostrar un Toast con la puntuación actual
-            Toast.makeText(this, "Puntuación actual: $score", Toast.LENGTH_SHORT).show()
-
-
-
-
-
-
+            val intent = Intent(this@FinalScreenActivity, ScoreActivity::class.java)
+            intent.putExtra("EXTRA_SCORE", score) // score variable para pasar el dato de la puntuación actual
+            startActivity(intent)
         }
 
 
         // Configura el botón de Récord
         val highScoreButton = findViewById<Button>(R.id.highScoreButton)
         highScoreButton.setOnClickListener {
-            // Aquí es donde colocarías el código para mostrar el récord
+            // Esperando a la pantalla de "Play" y "RECORD", para redirigirla con el botón de récord
         }
     }
 }
