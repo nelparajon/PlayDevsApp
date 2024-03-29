@@ -19,8 +19,8 @@ class GameActivity : AppCompatActivity() {
 
     private var clickCount = 0
     private val totalRolls = 10 //10 tiradas iniciales
-    private val DISABLED_BUTNS_DURATION: Long = 1000
-    private val SHOW_TEXT: Long = 1200
+    private val ANIMATIONS_DURATION: Long = 1000
+    private val SHOW_TEXT: Long = 1100
     private lateinit var  diceImageView: ImageView
     private lateinit var  diceImageView2: ImageView
     private lateinit var  diceImageView3: ImageView
@@ -41,6 +41,7 @@ class GameActivity : AppCompatActivity() {
         var textViewPar = findViewById<TextView>(R.id.parText)
         var textViewImpar = findViewById<TextView>(R.id.imparText)
 
+        //boton par con un listener donde se incluye como funciona el boton y que funciones desempeña
         onRollBtnPar.setOnClickListener {
             if (clickCount < 10) {
 
@@ -49,7 +50,7 @@ class GameActivity : AppCompatActivity() {
                 clickCount++
 
                 updateRollsRemaining(totalRolls ,clickCount, viewRollsText)
-                activateBtns()
+
                 //bucle que pasa a la siguiente activity(pantalla puntuación) cuando se acabe el contador de clics
                 /* if(clickCount == 10){
                     openScoreActivity(updateScore)
@@ -59,6 +60,7 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
+        //boton impar con un listener donde se incluye como funciona el boton y que funciones desempeña
         onRollBtnImpar.setOnClickListener {
             if (clickCount < 10) {
 
@@ -78,6 +80,7 @@ class GameActivity : AppCompatActivity() {
 
     }
 
+    //onClic del botón par
     private fun onClicParBtn(){
         //deshabilitamos los botones
         disabledBtns()
@@ -97,6 +100,7 @@ class GameActivity : AppCompatActivity() {
         activateBtns()
     }
 
+    //onClic del boton impar
     private fun onClicImparBtn(){
         disabledBtns()
 
@@ -132,7 +136,7 @@ class GameActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             onRollBtnPar.isEnabled = true
             onRollBtnImpar.isEnabled = true
-        }, DISABLED_BUTNS_DURATION)
+        }, ANIMATIONS_DURATION)
     }
 
     //función donde inicializamos todas las vistas y sus valores iniciales(si existiesen)
@@ -229,8 +233,11 @@ class GameActivity : AppCompatActivity() {
 
     //función que actualiza la vista de puntuación del jugador
     private fun updateUIScore(success: Boolean){
-        var updateScore: Int = scoreSuccess(success, textViewScore)
-        textViewScore.text = "$updateScore"
+        Handler(Looper.getMainLooper()).postDelayed({
+            var updateScore: Int = scoreSuccess(success, textViewScore)
+            textViewScore.text = "$updateScore"
+        },SHOW_TEXT)
+
     }
 
     //función que actualiza las tiradas de dados restantes
