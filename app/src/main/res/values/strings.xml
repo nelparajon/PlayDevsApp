@@ -19,6 +19,10 @@
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
 
+    <!-- FinalScreen Activity -->
+    <string name="puntuacion_actual">Puntuación Actual: %1$d</string>
+    <string name="record">Récord: %1$d</string>
+
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
     <string name="reply_title">Default reply action</string>
