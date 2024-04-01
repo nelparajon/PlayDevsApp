@@ -37,6 +37,11 @@
         <activity
             android:name=".GameActivity"
             android:exported="true" />
+
+        <activity
+            android:name=".FinalScreenActivity"
+            android:exported="true"/>
+
     </application>
 
 </manifest>
