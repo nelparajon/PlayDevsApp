@@ -25,37 +25,43 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
         android:text="Nueva Partida"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/diceImageView" />
 
 
-    <!-- Botón Puntuación Actual -->
-    <Button
-        android:id="@+id/currentScoreButton"
-        android:layout_width="0dp"
+    <!-- Puntuación Actual -->
+
+    <TextView
+        android:id="@+id/scoreTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text="Puntuación Actual"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        android:layout_marginTop="50dp"
+        android:text="0"
+        android:textColor="#E3F6F6"
+        android:textSize="30sp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/newGameButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/newGameButton" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 
-    <!-- Botón Récord -->
-    <Button
-        android:id="@+id/highScoreButton"
-        android:layout_width="0dp"
+    <!-- Récord -->
+    <TextView
+        android:id="@+id/highScoreTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Récord"
-        app:layout_constraintTop_toBottomOf="@id/currentScoreButton"
+        android:layout_marginTop="60dp"
+        android:text="0"
+        android:textColor="#E3F6F6"
+        android:textSize="30sp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/scoreTextView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:layout_marginTop="36dp" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
