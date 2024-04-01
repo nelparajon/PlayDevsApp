@@ -34,6 +34,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var imparText: TextView
     private var score = 0
 
+
     private lateinit var playerTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -255,25 +256,35 @@ class GameActivity : AppCompatActivity() {
     private fun updateRollsRemaining(totalRolls: Int, clickCount: Int, textView: TextView){
       var rollsRemaining = totalRolls - clickCount
       textView.text = "$rollsRemaining"
+        if (rollsRemaining == 0) {
+            openFinalScreenActivity()
+        }
+
+
+        }
+
+    private fun openFinalScreenActivity() {
+        Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this@GameActivity, FinalScreenActivity::class.java)
+        intent.putExtra("EXTRA_SCORE", score) // Variable 'score'
+        startActivity(intent)
+        finish()
     }
 
     //función para cambiar a la siguiente activity(pantalla puntuación)
     //además se le pasa la variable de puntuación para poder usarla en la siguiente activity
     //de momento solo lanza un texto
-    private fun openScoreActivity(updateScore: Int){
+
+
+    //private fun openScoreActivity(updateScore: Int){
        // val intent = Intent(this, ScoreActivity::class.java)
         //intent.putExtra("score", updateScore)
         //startActivity(intent)
         //finish()
-        Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT)
-
-        val intent = Intent(this@GameActivity, FinalScreenActivity::class.java)
-        intent.putExtra("EXTRA_SCORE", score) // score como variable
-        startActivity(intent)
-        finish()// Si se quiere finalizar GameActivity
+        //Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT)
 
 
     }
-}
+
 
 
