@@ -13,6 +13,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
+
 
 
 class GameActivity : AppCompatActivity() {
@@ -30,6 +32,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var viewRollsText: TextView
     private lateinit var parText: TextView
     private lateinit var imparText: TextView
+    private var score = 0
 
     private lateinit var playerTextView: TextView
 
@@ -263,6 +266,12 @@ class GameActivity : AppCompatActivity() {
         //startActivity(intent)
         //finish()
         Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT)
+
+        val intent = Intent(this@GameActivity, FinalScreenActivity::class.java)
+        intent.putExtra("EXTRA_SCORE", score) // score como variable
+        startActivity(intent)
+        finish()// Si se quiere finalizar GameActivity
+
 
     }
 }
