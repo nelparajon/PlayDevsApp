@@ -4,9 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import  android.widget.Toast
-
-
+import android.widget.Toast
 
 class FinalScreenActivity : AppCompatActivity() {
 
@@ -19,26 +17,23 @@ class FinalScreenActivity : AppCompatActivity() {
         newGameButton.setOnClickListener {
             // Crear un Intent para iniciar GameActivity
             val intent = Intent(this@FinalScreenActivity, GameActivity::class.java)
-            // Iniciar la actividad
             startActivity(intent)
         }
 
         val score = intent.getIntExtra("EXTRA_SCORE", 0) // 0 es el valor por defecto
 
-
         // Configura el botón de Puntuación Actual
         val currentScoreButton = findViewById<Button>(R.id.currentScoreButton)
         currentScoreButton.setOnClickListener {
             val intent = Intent(this@FinalScreenActivity, ScoreActivity::class.java)
-            intent.putExtra("EXTRA_SCORE", score) // score variable para pasar el dato de la puntuación actual
+            intent.putExtra("EXTRA_SCORE", score) // Pasar el dato de la puntuación actual
             startActivity(intent)
         }
-
 
         // Configura el botón de Récord
         val highScoreButton = findViewById<Button>(R.id.highScoreButton)
         highScoreButton.setOnClickListener {
-            // Esperando a la pantalla de "Play" y "RECORD", para redirigirla con el botón de récord
+            Toast.makeText(this, "Funcionalidad de récord aún no implementada", Toast.LENGTH_SHORT).show()
         }
     }
 }

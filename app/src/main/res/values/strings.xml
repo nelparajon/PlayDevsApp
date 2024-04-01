@@ -15,5 +15,7 @@
     <string name="contador">contador</string>
     <string name="player">Player</string>
     <string name="puntuacion_actual">Puntuación actual: %1$d</string>
+    <string name="back_button_text">Atrás</string>
+
 
 </resources>
