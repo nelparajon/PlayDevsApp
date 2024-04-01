@@ -14,10 +14,9 @@
     <string name="remaining_rolls_text">Tiradas restantes: 10</string>
     <string name="contador">contador</string>
     <string name="player">Player</string>
-    <string name="puntuacion_inicial">Puntuación: 0</string>
     <string name="puntuacion_actual">Puntuación Actual: %1$d</string>
     <string name="record">Récord: %1$d</string>
-    <string name="back_button_text">Atrás</string>
+
 
 
 </resources>
