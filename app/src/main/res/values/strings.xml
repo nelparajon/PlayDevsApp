@@ -1,10 +1,21 @@
 <resources>
+    <!-- Nombre aplicación -->
     <string name="app_name">PlayDevsGame</string>
+
+    <!-- Main Activity -->
     <string name="btn_play">PLAY</string>
-    <string name="btn_tirada">TIRAR</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Game Activity -->
+    <string name="btn_par">PAR</string>
+    <string name="btn_impar">IMPAR</string>
+    <string name="score">SCORE</string>
+    <string name="par">PAR!</string>
+    <string name="impar">IMPAR!</string>
+    <string name="rolls_text">TIRADAS</string>
+    <string name="player_name">PLAYER</string>
 
     <!-- Preference Titles -->
+    <string name="title_activity_settings">SettingsActivity</string>
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
 
