@@ -1,5 +1,7 @@
 package com.playdevsgame
 
+import DatabaseHandler
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +13,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var databaseHandler: DatabaseHandler
 
+    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -20,7 +23,13 @@ class MainActivity : AppCompatActivity() {
         databaseHandler.insertData("Jugador1", 10).subscribe {
             Log.d("MainActivity", "Registro insertado correctamente")
         }
-
+        databaseHandler.getRecordScoreData()
+            .subscribe({ highScore ->
+                // Aquí puedes mostrar el récord de puntuación en la actividad principal si lo deseas
+                Log.d("MainActivity", "High Score: $highScore")
+            }, { error ->
+                // Manejar el error si ocurre
+            })
 
         // Verificar si el nombre de jugador predeterminado ya está configurado en SharedPreferences
         val playerName = PreferenceManager.getPlayerName(this)
