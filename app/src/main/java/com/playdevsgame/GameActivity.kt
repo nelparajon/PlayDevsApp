@@ -14,11 +14,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
-
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import java.time.LocalDate
 
 
 class GameActivity : AppCompatActivity() {
 
+    private var playerName = "Player"
     private var clickCount = 0
     private val totalRolls = 10 //10 tiradas iniciales
     private val ANIMATIONS_DURATION: Long = 1000
@@ -37,12 +40,19 @@ class GameActivity : AppCompatActivity() {
 
     private lateinit var playerTextView: TextView
 
+    private lateinit var databaseHandler: DatabaseHandler
+    private val disposables = CompositeDisposable()
+    private lateinit var lastDate: LocalDate
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
         initializateViews()
+
+        databaseHandler = DatabaseHandler(this)
 
         var textViewPar = findViewById<TextView>(R.id.parText)
         var textViewImpar = findViewById<TextView>(R.id.imparText)
@@ -63,13 +73,23 @@ class GameActivity : AppCompatActivity() {
 
                 updateRollsRemaining(totalRolls ,clickCount, viewRollsText)
 
+                if (clickCount == totalRolls) {
+                    val finalScore = textViewScore.text.toString().toInt()
+                    keepDataInBD(playerName, finalScore)
+                    openScoreActivity(finalScore)
+                    getScoredData()
+                    getAllScores()
+                    finish()
+                }
                 //bucle que pasa a la siguiente activity(pantalla puntuación) cuando se acabe el contador de clics
                 /* if(clickCount == 10){
                     openScoreActivity(updateScore)
+                    keepDataInBD(playerName, textViewScore)
                     finish()
                 }*/
 
             }
+
         }
 
         //boton impar con un listener donde se incluye como funciona el boton y que funciones desempeña
@@ -83,10 +103,15 @@ class GameActivity : AppCompatActivity() {
                 updateRollsRemaining(totalRolls, clickCount, viewRollsText)
 
                 //bucle que pasa a la siguiente activity(pantalla puntuación) cuando se acabe el contador de clics
-                /* if(clickCount == 10){
-                    openScoreActivity(updateScore)
-                }*/
 
+                if (clickCount == totalRolls) {
+                    val finalScore = textViewScore.text.toString().toInt()
+                    keepDataInBD(playerName, finalScore)
+                    openScoreActivity(finalScore)
+                    getScoredData()
+                    getAllScores()
+                    finish()
+                }
             }
         }
 
@@ -110,6 +135,8 @@ class GameActivity : AppCompatActivity() {
         updateUIScore(success)
         //retrasamos la activación de los dados durante 0,9 segundos
         activateBtns()
+
+
     }
 
     //onClic del boton impar
@@ -230,13 +257,11 @@ class GameActivity : AppCompatActivity() {
 
         // Obtener el puntaje actual del TextView
         var score: Int = textView.text.toString().toIntOrNull() ?: 0
-        Log.d("TAG", "Puntaje actual: $score")
 
         // Si el jugador acierta, el puntaje se suma en 10
         if (success) {
             score += 10
 
-            Log.d("TAG", "El jugador ha acertado, puntaje establecido en 10")
         }
 
         // Guardar el puntaje actualizado
@@ -253,6 +278,17 @@ class GameActivity : AppCompatActivity() {
             textViewScore.text = "$updateScore"
         },SHOW_TEXT)
 
+    }
+
+    private fun keepDataInBD(playerName: String, newScore: Int){
+        val disposable = databaseHandler.insertData(playerName, newScore)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Log.d("TAG", "Guardada la score en la base de datos")
+            }, {error("Error al guardar en la base de datos")
+            })
+
+        disposables.add(disposable)
     }
 
     //función que actualiza las tiradas de dados restantes
@@ -278,16 +314,43 @@ class GameActivity : AppCompatActivity() {
     //además se le pasa la variable de puntuación para poder usarla en la siguiente activity
     //de momento solo lanza un texto
 
-
-    //private fun openScoreActivity(updateScore: Int){
-       // val intent = Intent(this, ScoreActivity::class.java)
-        //intent.putExtra("score", updateScore)
+    private fun openScoreActivity(finalScore: Int){
+       //val intent = Intent(this, ScoreActivity::class.java)
+        //intent.putExtra("score", finalScore)
         //startActivity(intent)
         //finish()
-        //Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT)
-
+        Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT).show()
 
     }
+
+    private fun getScoredData(){
+        val disposable = databaseHandler.getRecordScoreData()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe( { recordScore ->
+            Log.d("GetScoredData", "El record es $recordScore")
+
+        }, { error ->
+            Log.e("GameActivity", "Error al obtener la puntuación máxima", error)
+        })
+        disposables.add(disposable)
+    }
+
+    private fun getAllScores() {
+        val disposable = databaseHandler.getAllScoreData()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ scores ->
+                for (score in scores) {
+                    Log.d("ScoreActivity", "Score: $score")
+                }
+            }, { error ->
+                Log.e("ScoreActivity", "Error al obtener las puntuaciones", error)
+            })
+
+        disposables.add(disposable)
+    }
+
+
+}
 
 
 
