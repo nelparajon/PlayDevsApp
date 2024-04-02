@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="diceImageView3" type="id" />
+    <item name="btn_par" type="id" />
+    <item name="btn_impar" type="id" />
+    <item name="boxRolls" type="id" />
+    <item name="rollsNum" type="id" />
+    <item name="textTiradas" type="id" />
+    <item name="score" type="id" />
+    <item name="parText" type="id" />
+    <item name="imparText" type="id" />
+    <item name="playerText" type="id" />
+</resources>

@@ -1,16 +1,21 @@
 package com.playdevsgame
 
+import DatabaseHandler
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 
 class FinalScreenActivity : AppCompatActivity() {
 
     private lateinit var databaseHandler: DatabaseHandler // Agregar una instancia de DatabaseHandler
 
+    @SuppressLint("StringFormatInvalid", "CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_final_screen)
@@ -35,12 +40,32 @@ class FinalScreenActivity : AppCompatActivity() {
 
         // Configurar el Récord
         val highScoreTextView: TextView = findViewById(R.id.HighScoreTextView)
-        val highScore = databaseHandler.getHighScore() // Obtener el récord desde la base de datos
-        highScoreTextView.text = getString(R.string.record, highScore)
-    }
+        databaseHandler.getRecordScoreData()
+            .subscribe({ highScore ->
+                highScoreTextView.text = getString(R.string.record, highScore)
+            }, { error ->
+                // Manejar el error si ocurre
+            })
 
-    private fun getHighScore(): Int {
-        val sharedPreferences = getSharedPreferences("GamePrefs", MODE_PRIVATE)
-        return sharedPreferences.getInt("HIGH_SCORE", 0) // 0 es el valor por defecto
-    }
+        // Verificar si la puntuación supera al récord actual
+        databaseHandler.getRecordScoreData()
+            .subscribeOn(Schedulers.io())
+            .subscribe({ highScore ->
+                if (score > highScore) {
+                    // Actualizar el récord en la base de datos
+                    databaseHandler.updateRecordScore(score)
+                        .subscribeOn(Schedulers.io())
+                        .subscribe({
+                            Log.d("FinalScreenActivity", "Récord actualizado en la base de datos")
+                        }, { error ->
+                            Log.e("FinalScreenActivity", "Error al actualizar el récord: $error")
+                        })
+                }
+            }, { error ->
+                Log.e("FinalScreenActivity", "Error al obtener el récord: $error")
+            })
+
 }
+}
+
+
