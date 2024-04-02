@@ -239,6 +239,9 @@ class GameActivity : AppCompatActivity() {
             Log.d("TAG", "El jugador ha acertado, puntaje establecido en 10")
         }
 
+        // Guardar el puntaje actualizado
+        this.score = score
+
         Log.d("TAG", "Puntaje final: $score")
         return score
     }
@@ -254,14 +257,14 @@ class GameActivity : AppCompatActivity() {
 
     //función que actualiza las tiradas de dados restantes
     private fun updateRollsRemaining(totalRolls: Int, clickCount: Int, textView: TextView){
-      var rollsRemaining = totalRolls - clickCount
-      textView.text = "$rollsRemaining"
+        var rollsRemaining = totalRolls - clickCount
+        textView.text = "$rollsRemaining"
         if (rollsRemaining == 0) {
             openFinalScreenActivity()
         }
 
 
-        }
+    }
 
     private fun openFinalScreenActivity() {
         Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT).show()
