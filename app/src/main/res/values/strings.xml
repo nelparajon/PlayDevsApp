@@ -16,4 +16,6 @@
     <string name="player" />
     <string name="logo_description" />
     <string name="settings" />
+    <string name="puntuacion_actual">Puntuación Actual: %1$d</string>
+    <string name="record">Récord: %1$d</string>
 </resources>
