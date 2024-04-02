@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" >
+    <!-- radio de 5dp-->
+    <corners
+        android:radius="5dp"/>
+
+    <!--color de fondo-->
+    <solid
+        android:color="@color/back_btns" />
+    <!-- ancho de la línea y el color -->
+    <stroke
+        android:width="5dip"
+        android:color="@android:color/black"/>
+</shape>

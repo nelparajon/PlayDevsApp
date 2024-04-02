@@ -17,4 +17,17 @@
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">25sp</item>
     </style>
+
+    <style name="btn_par">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:background">@drawable/btn_border</item>
+    </style>
+    <style name="btn_impar">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:background">@drawable/btn_border</item>
+    </style>
 </resources>
