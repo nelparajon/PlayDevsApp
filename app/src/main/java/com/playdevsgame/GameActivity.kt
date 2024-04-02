@@ -33,7 +33,6 @@ class GameActivity : AppCompatActivity() {
     private lateinit var parText: TextView
     private lateinit var imparText: TextView
     private var score = 0
-    private lateinit var databaseHandler: DatabaseHandler // Agregar una instancia de DatabaseHandler
 
 
     private lateinit var playerTextView: TextView
@@ -44,10 +43,6 @@ class GameActivity : AppCompatActivity() {
         setContentView(R.layout.activity_game)
 
         initializateViews()
-
-        // Inicializar la instancia de DatabaseHandler
-        databaseHandler = DatabaseHandler(this)
-
 
         var textViewPar = findViewById<TextView>(R.id.parText)
         var textViewImpar = findViewById<TextView>(R.id.imparText)
@@ -272,19 +267,9 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun openFinalScreenActivity() {
-        // Guardar la puntuación actual en la base de datos antes de abrir la pantalla final
-        databaseHandler.addScore(score)
-
-        // Obtener el récord actual desde la base de datos
-        val highScore = databaseHandler.getHighScore()
-
-        // Mostrar un mensaje de finalización del juego
         Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT).show()
-
-        // Abrir la pantalla final y pasar la puntuación actual y el récord
         val intent = Intent(this@GameActivity, FinalScreenActivity::class.java)
-        intent.putExtra("EXTRA_SCORE", score)
-        intent.putExtra("EXTRA_HIGH_SCORE", highScore)
+        intent.putExtra("EXTRA_SCORE", score) // Variable 'score'
         startActivity(intent)
         finish()
     }
