@@ -9,9 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 
 class FinalScreenActivity : AppCompatActivity() {
 
+    private lateinit var databaseHandler: DatabaseHandler // Agregar una instancia de DatabaseHandler
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_final_screen)
+
+        databaseHandler = DatabaseHandler(this) // Inicializar la instancia de DatabaseHandler
 
         // Configura el botón de Nueva Partida
         val newGameButton: Button = findViewById(R.id.NewGameButton)
@@ -31,7 +35,7 @@ class FinalScreenActivity : AppCompatActivity() {
 
         // Configurar el Récord
         val highScoreTextView: TextView = findViewById(R.id.HighScoreTextView)
-        val highScore = getHighScore() // Este método recupera el récord actual
+        val highScore = databaseHandler.getHighScore() // Obtener el récord desde la base de datos
         highScoreTextView.text = getString(R.string.record, highScore)
     }
 
