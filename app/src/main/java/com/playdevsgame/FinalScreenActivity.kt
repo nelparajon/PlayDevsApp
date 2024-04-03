@@ -6,8 +6,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.appbar.MaterialToolbar
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 
@@ -19,6 +21,21 @@ class FinalScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_final_screen)
+
+        val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        val homeButton: ImageButton = findViewById(R.id.homeButton)
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        val settingsButton: ImageButton = findViewById(R.id.settingsButton)
+        settingsButton.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
 
         databaseHandler = DatabaseHandler(this) // Inicializar la instancia de DatabaseHandler
         databaseHandler.checkGameHistory()

@@ -16,7 +16,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import DatabaseHandler
-
+import android.widget.ImageButton
+import com.google.android.material.appbar.MaterialToolbar
 
 
 class GameActivity : AppCompatActivity() {
@@ -44,6 +45,21 @@ class GameActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+
+        val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        val homeButton: ImageButton = findViewById(R.id.homeButton)
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        val settingsButton: ImageButton = findViewById(R.id.settingsButton)
+        settingsButton.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
 
         initializateViews()
 

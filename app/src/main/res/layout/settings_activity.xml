@@ -9,6 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!--    toolbar-->
+        <include
+            layout="@layout/toolbar_custom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <Button
             android:id="@+id/instructionsButton"
             style="@style/PlayBtn"

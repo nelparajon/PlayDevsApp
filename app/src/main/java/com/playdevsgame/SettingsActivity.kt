@@ -8,7 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.app.AlertDialog
 import androidx.core.text.HtmlCompat
 import DatabaseHandler
+import android.content.Intent
 import android.util.Log
+import android.widget.ImageButton
+import com.google.android.material.appbar.MaterialToolbar
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -19,6 +22,21 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
+
+        val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        val homeButton: ImageButton = findViewById(R.id.homeButton)
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        val settingsButton: ImageButton = findViewById(R.id.settingsButton)
+        settingsButton.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
 
         val playerNameEditText: EditText = findViewById(R.id.playerNameEditText)
         val backButton: Button = findViewById(R.id.backButton)
