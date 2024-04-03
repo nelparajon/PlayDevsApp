@@ -273,7 +273,9 @@ class GameActivity : AppCompatActivity() {
     private fun insertScoreInBD(finalScore: Int) {
         val playerName = PreferenceManager.getPlayerName(this)
         val db = databaseHandler.writableDatabase
-        databaseHandler.insertData(playerName, finalScore)
+        databaseHandler.insertData(playerName, finalScore).subscribe {
+            Log.d("MainActivity", "Registro insertado correctamente")
+        }
         db.close()
     }
 
