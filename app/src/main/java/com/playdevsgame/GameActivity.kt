@@ -267,13 +267,13 @@ class GameActivity : AppCompatActivity() {
     private fun updateRollsRemaining(totalRolls: Int, clickCount: Int, textView: TextView) {
         var rollsRemaining = totalRolls - clickCount
         textView.text = "$rollsRemaining"
+        // Después de la última tirada
         if (rollsRemaining == 0) {
-            openFinalScreenActivity()
+            Handler(Looper.getMainLooper()).postDelayed({
+                openFinalScreenActivity()
+            }, 2000) // Cambia el valor 2000 por el tiempo en milisegundos que desees de retraso
         }
-
-
     }
-
     private fun openFinalScreenActivity() {
         Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT).show()
 
