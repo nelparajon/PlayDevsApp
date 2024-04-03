@@ -20,9 +20,9 @@ class MainActivity : AppCompatActivity() {
         databaseHandler = DatabaseHandler(this)
         databaseHandler.writableDatabase
 
-        databaseHandler.insertData("Jugador1", 10).subscribe {
+        /*databaseHandler.insertData(PreferenceManager.getPlayerName(this), 10).subscribe {
             Log.d("MainActivity", "Registro insertado correctamente")
-        }
+        }*/
         databaseHandler.getRecordScoreData()
             .subscribe({ highScore ->
                 // Aquí puedes mostrar el récord de puntuación en la actividad principal si lo deseas
