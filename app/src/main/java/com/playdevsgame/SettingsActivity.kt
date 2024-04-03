@@ -1,14 +1,19 @@
 package com.playdevsgame
 
+import DatabaseHandler
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import android.app.AlertDialog
+import android.util.Log
 import androidx.core.text.HtmlCompat
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class SettingsActivity : AppCompatActivity() {
+
+    private lateinit var databaseHandler: DatabaseHandler // Agregar una instancia de DatabaseHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,15 +22,25 @@ class SettingsActivity : AppCompatActivity() {
         val playerNameEditText: EditText = findViewById(R.id.playerNameEditText)
         val backButton: Button = findViewById(R.id.backButton)
 
+        databaseHandler = DatabaseHandler(this) // Inicializar la instancia de DatabaseHandler
         // Cargar el nombre del jugador guardado
         val playerName = PreferenceManager.getPlayerName(this)
         playerNameEditText.setText(playerName)
 
         playerNameEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT) {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val newName = playerNameEditText.text.toString()
-                // Guardar el nuevo nombre del jugador
+                // Guardar el nuevo nombre del jugador en las preferencias
                 PreferenceManager.savePlayerName(this, newName)
+                // Guardar el nuevo nombre del jugador en la base de datos
+                databaseHandler.insertData(newName, 0) // 0 o cualquier otro valor para la puntuación inicial
+                    .subscribeOn(Schedulers.io())
+                    .subscribe({
+                        Log.d("SettingsActivity", "Nombre de jugador guardado en la base de datos")
+                    }, { error ->
+                        Log.e("SettingsActivity", "Error al guardar el nombre de jugador en la base de datos: $error")
+                    })
+                playerNameEditText.clearFocus() // Ocultar el teclado virtual
                 true // Indica que se ha manejado el evento de acción del editor
             } else {
                 false // Indica que no se ha manejado el evento de acción del editor
