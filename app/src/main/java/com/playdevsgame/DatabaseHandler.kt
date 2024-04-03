@@ -136,4 +136,33 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
         }.subscribeOn(Schedulers.io())
     }
 
+    fun clearTable(): Completable {
+        return Completable.fromAction {
+            val db = writableDatabase
+            db.delete("game_history", null, null)
+            db.close()
+            Log.d("DatabaseHandler", "Contenido de la tabla borrado correctamente")
+        }.subscribeOn(Schedulers.io())
+    }
+
+    //Select * FROM la tabla del historial
+    fun checkGameHistory() {
+        val db = readableDatabase
+        val cursor: Cursor? = db.rawQuery("SELECT * FROM game_history", null)
+        cursor?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                do {
+                    val id = cursor.getInt(cursor.getColumnIndex("id_history"))
+                    val playerName = cursor.getString(cursor.getColumnIndex("player_name"))
+                    val score = cursor.getInt(cursor.getColumnIndex("score"))
+                    Log.d("DatabaseHandler", "ID: $id, Player Name: $playerName, Score: $score")
+                } while (cursor.moveToNext())
+            } else {
+                Log.d("DatabaseHandler", "No hay registros en la tabla game_history")
+            }
+        }
+        cursor?.close()
+        db.close()
+    }
+
 }

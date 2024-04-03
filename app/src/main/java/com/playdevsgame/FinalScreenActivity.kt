@@ -21,7 +21,10 @@ class FinalScreenActivity : AppCompatActivity() {
         setContentView(R.layout.activity_final_screen)
 
         databaseHandler = DatabaseHandler(this) // Inicializar la instancia de DatabaseHandler
-
+        databaseHandler.checkGameHistory()
+        //borrar tabla
+        databaseHandler.clearTable()
+        databaseHandler.checkGameHistory()
         // Configura el botón de Nueva Partida
         val newGameButton: Button = findViewById(R.id.NewGameButton)
         newGameButton.setOnClickListener {
@@ -38,34 +41,24 @@ class FinalScreenActivity : AppCompatActivity() {
         // Establecer el texto con la puntuación actual
         scoreTextView.text = getString(R.string.puntuacion_actual, score)
 
-        // Configurar el Récord
-        val highScoreTextView: TextView = findViewById(R.id.HighScoreTextView)
-        databaseHandler.getRecordScoreData()
-            .subscribe({ highScore ->
-                highScoreTextView.text = getString(R.string.record, highScore)
-            }, { error ->
-                // Manejar el error si ocurre
-            })
-
         // Verificar si la puntuación supera al récord actual
+        val highScoreTextView: TextView = findViewById(R.id.HighScoreTextView)
         databaseHandler.getRecordScoreData()
             .subscribeOn(Schedulers.io())
             .subscribe({ highScore ->
                 if (score > highScore) {
-                    // Actualizar el récord en la base de datos
-                    databaseHandler.updateRecordScore(score)
-                        .subscribeOn(Schedulers.io())
-                        .subscribe({
-                            Log.d("FinalScreenActivity", "Récord actualizado en la base de datos")
-                        }, { error ->
-                            Log.e("FinalScreenActivity", "Error al actualizar el récord: $error")
-                        })
+                    highScoreTextView.text = getString(R.string.record, score)
+                }
+                else {
+                    // Configurar el Récord
+                    highScoreTextView.text = getString(R.string.record, highScore)
                 }
             }, { error ->
                 Log.e("FinalScreenActivity", "Error al obtener el récord: $error")
             })
+        databaseHandler.checkGameHistory()
+    }
 
-}
 }
 
 
