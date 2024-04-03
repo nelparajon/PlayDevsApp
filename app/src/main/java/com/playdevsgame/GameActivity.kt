@@ -1,6 +1,7 @@
 package com.playdevsgame
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -24,10 +25,10 @@ class GameActivity : AppCompatActivity() {
     private val totalRolls = 10 //10 tiradas iniciales
     private val ANIMATIONS_DURATION: Long = 1000
     private val SHOW_TEXT: Long = 1100
-    private lateinit var  diceImageView: ImageView
-    private lateinit var  diceImageView2: ImageView
-    private lateinit var  diceImageView3: ImageView
-    private lateinit var  textViewScore: TextView
+    private lateinit var diceImageView: ImageView
+    private lateinit var diceImageView2: ImageView
+    private lateinit var diceImageView3: ImageView
+    private lateinit var textViewScore: TextView
     private lateinit var onRollBtnPar: Button
     private lateinit var onRollBtnImpar: Button
     private lateinit var viewRollsText: TextView
@@ -38,6 +39,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var databaseHandler: DatabaseHandler // Agregar una instancia de DatabaseHandler
 
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -62,7 +64,7 @@ class GameActivity : AppCompatActivity() {
 
                 clickCount++
 
-                updateRollsRemaining(totalRolls ,clickCount, viewRollsText)
+                updateRollsRemaining(totalRolls, clickCount, viewRollsText)
 
                 //bucle que pasa a la siguiente activity(pantalla puntuación) cuando se acabe el contador de clics
                 /* if(clickCount == 10){
@@ -94,7 +96,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     //onClic del botón par
-    private fun onClicParBtn(){
+    private fun onClicParBtn() {
         //deshabilitamos los botones
         disabledBtns()
         val (randomDiceValue1, randomDiceValue2, randomDiceValue3) = rollDice()
@@ -118,7 +120,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     //onClic del boton impar
-    private fun onClicImparBtn(){
+    private fun onClicImparBtn() {
         disabledBtns()
 
         val (randomDiceValue1, randomDiceValue2, randomDiceValue3) = rollDice()
@@ -144,14 +146,14 @@ class GameActivity : AppCompatActivity() {
 
     //función que se usará para desahabilitar los botones durante la animación
     //evitando colapso al pulsarlos demasiado rápido
-    private fun disabledBtns(){
+    private fun disabledBtns() {
         onRollBtnPar.isEnabled = false
         onRollBtnImpar.isEnabled = false
     }
 
     //función que activa los botones de nuevo
     //retrasamos la activación durante 0,9 segundos para que coincida con la animacion
-    private fun activateBtns(){
+    private fun activateBtns() {
         Handler(Looper.getMainLooper()).postDelayed({
             onRollBtnPar.isEnabled = true
             onRollBtnImpar.isEnabled = true
@@ -159,7 +161,7 @@ class GameActivity : AppCompatActivity() {
     }
 
     //función donde inicializamos todas las vistas y sus valores iniciales(si existiesen)
-    private fun initializateViews(){
+    private fun initializateViews() {
         diceImageView = findViewById(R.id.diceImageView)
         diceImageView2 = findViewById(R.id.diceImageView2)
         diceImageView3 = findViewById(R.id.diceImageView3)
@@ -230,6 +232,7 @@ class GameActivity : AppCompatActivity() {
         }, SHOW_TEXT)
 
     }
+
     /**/
     //función que calcula la puntuación del jugador en base al acierto
     private fun scoreSuccess(success: Boolean, textView: TextView): Int {
@@ -251,16 +254,16 @@ class GameActivity : AppCompatActivity() {
     }
 
     //función que actualiza la vista de puntuación del jugador
-    private fun updateUIScore(success: Boolean){
+    private fun updateUIScore(success: Boolean) {
         Handler(Looper.getMainLooper()).postDelayed({
             var updateScore: Int = scoreSuccess(success, textViewScore)
             textViewScore.text = "$updateScore"
-        },SHOW_TEXT)
+        }, SHOW_TEXT)
 
     }
 
     //función que actualiza las tiradas de dados restantes
-    private fun updateRollsRemaining(totalRolls: Int, clickCount: Int, textView: TextView){
+    private fun updateRollsRemaining(totalRolls: Int, clickCount: Int, textView: TextView) {
         var rollsRemaining = totalRolls - clickCount
         textView.text = "$rollsRemaining"
         if (rollsRemaining == 0) {
@@ -287,21 +290,18 @@ class GameActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+}
 
-    //función para cambiar a la siguiente activity(pantalla puntuación)
-    //además se le pasa la variable de puntuación para poder usarla en la siguiente activity
-    //de momento solo lanza un texto
-
-
-    //private fun openScoreActivity(updateScore: Int){
-       // val intent = Intent(this, ScoreActivity::class.java)
-        //intent.putExtra("score", updateScore)
-        //startActivity(intent)
-        //finish()
-        //Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT)
+//función para cambiar a la siguiente activity(pantalla puntuación)
+//además se le pasa la variable de puntuación para poder usarla en la siguiente activity
+//de momento solo lanza un texto
 
 
-    }
-
+//private fun openScoreActivity(updateScore: Int){
+// val intent = Intent(this, ScoreActivity::class.java)
+//intent.putExtra("score", updateScore)
+//startActivity(intent)
+//finish()
+//Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT)
 
 
