@@ -110,8 +110,12 @@ class GameActivity : AppCompatActivity() {
         //textViewCode.text = "$diceRollSum"
         val success: Boolean = diceRollSum % 2 == 0
         updateUIScore(success)
+
+
         //retrasamos la activación de los dados durante 0,9 segundos
-        activateBtns()
+        if ((totalRolls - clickCount) > 0) {
+            activateBtns()
+        }
     }
 
     //onClic del boton impar
@@ -133,7 +137,9 @@ class GameActivity : AppCompatActivity() {
         var success: Boolean = diceRollSum % 2 != 0
         updateUIScore(success)
 
-        activateBtns()
+        if ((totalRolls - clickCount) > 0) {
+            activateBtns()
+        }
 
     }
 
@@ -263,10 +269,10 @@ class GameActivity : AppCompatActivity() {
         var rollsRemaining = totalRolls - clickCount
         textView.text = "$rollsRemaining"
         if (rollsRemaining == 0) {
-            openFinalScreenActivity()
+            Handler(Looper.getMainLooper()).postDelayed({
+                openFinalScreenActivity()
+            }, 3000) // Espera 1 segundo (1000 milisegundos)
         }
-
-
     }
 
     private fun openFinalScreenActivity() {
