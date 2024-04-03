@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
+import DatabaseHandler
 
 
 
@@ -33,9 +34,9 @@ class GameActivity : AppCompatActivity() {
     private lateinit var parText: TextView
     private lateinit var imparText: TextView
     private var score = 0
-
-
     private lateinit var playerTextView: TextView
+    private lateinit var databaseHandler: DatabaseHandler // Agregar una instancia de DatabaseHandler
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -44,8 +45,8 @@ class GameActivity : AppCompatActivity() {
 
         initializateViews()
 
-        var textViewPar = findViewById<TextView>(R.id.parText)
-        var textViewImpar = findViewById<TextView>(R.id.imparText)
+        databaseHandler = DatabaseHandler(this) // Inicializar la instancia de DatabaseHandler
+        databaseHandler.writableDatabase
 
         playerTextView = findViewById(R.id.playerText)
 
@@ -241,12 +242,9 @@ class GameActivity : AppCompatActivity() {
         // Si el jugador acierta, el puntaje se suma en 10
         if (success) {
             score += 10
-
+            this.score = score
             Log.d("TAG", "El jugador ha acertado, puntaje establecido en 10")
         }
-
-        // Guardar el puntaje actualizado
-        this.score = score
 
         Log.d("TAG", "Puntaje final: $score")
         return score
@@ -272,8 +270,15 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+    private fun insertScoreInBD(finalScore: Int) {
+        val playerName = PreferenceManager.getPlayerName(this)
+        val db = databaseHandler.writableDatabase
+        databaseHandler.insertData(playerName, finalScore)
+        db.close()
+    }
+
     private fun openFinalScreenActivity() {
-        Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT).show()
+        insertScoreInBD(score)
         val intent = Intent(this@GameActivity, FinalScreenActivity::class.java)
         intent.putExtra("EXTRA_SCORE", score) // Variable 'score'
         startActivity(intent)
