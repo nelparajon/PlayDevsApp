@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
@@ -22,16 +23,16 @@ class FinalScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_final_screen)
 
-        val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
+    /*    val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         val homeButton: ImageButton = findViewById(R.id.homeButton)
         homeButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
-        }
+        }*/
 
-        val settingsButton: ImageButton = findViewById(R.id.settingsButton)
+        val settingsButton: ImageView = findViewById(R.id.botonSettings)
         settingsButton.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)

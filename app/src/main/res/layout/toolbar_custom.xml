@@ -17,7 +17,7 @@
         android:background="?attr/selectableItemBackground"
         android:contentDescription="@string/home" />
 
-    <ImageButton
+ <ImageButton
         android:id="@+id/settingsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
