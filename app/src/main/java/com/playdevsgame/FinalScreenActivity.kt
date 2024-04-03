@@ -46,26 +46,8 @@ class FinalScreenActivity : AppCompatActivity() {
             }, { error ->
                 // Manejar el error si ocurre
             })
-
-        // Verificar si la puntuación supera al récord actual
-        databaseHandler.getRecordScoreData()
-            .subscribeOn(Schedulers.io())
-            .subscribe({ highScore ->
-                if (score > highScore) {
-                    // Actualizar el récord en la base de datos
-                    databaseHandler.updateRecordScore(score)
-                        .subscribeOn(Schedulers.io())
-                        .subscribe({
-                            Log.d("FinalScreenActivity", "Récord actualizado en la base de datos")
-                        }, { error ->
-                            Log.e("FinalScreenActivity", "Error al actualizar el récord: $error")
-                        })
-                }
-            }, { error ->
-                Log.e("FinalScreenActivity", "Error al obtener el récord: $error")
-            })
-
+    }
 }
-}
+
 
 
