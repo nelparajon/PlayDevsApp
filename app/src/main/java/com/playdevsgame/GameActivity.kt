@@ -281,6 +281,7 @@ class GameActivity : AppCompatActivity() {
 
     private fun openFinalScreenActivity() {
         insertScoreInBD(score)
+        databaseHandler.checkGameHistory()
         val intent = Intent(this@GameActivity, FinalScreenActivity::class.java)
         intent.putExtra("EXTRA_SCORE", score) // Variable 'score'
         startActivity(intent)
