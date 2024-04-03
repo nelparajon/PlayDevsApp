@@ -1,21 +1,36 @@
 <resources>
+    <!-- Nombre aplicación -->
     <string name="app_name">PlayDevsGame</string>
+
+    <!-- Main Activity -->
     <string name="btn_play">PLAY</string>
-    <string name="btn_tirada">TIRAR</string>
-    <string name="title_activity_settings" />
-    <string name="dado_1_description" />
-    <string name="dado_2_description" />
-    <string name="dado_3_description" />
-    <string name="btn_par" />
-    <string name="par_button_text" />
-    <string name="btn_impar" />
-    <string name="impar_button_text" />
-    <string name="score" />
-    <string name="contador" />
-    <string name="remaining_rolls_text" />
-    <string name="player" />
-    <string name="logo_description" />
-    <string name="settings" />
+
+    <!-- Game Activity -->
+    <string name="btn_par">PAR</string>
+    <string name="btn_impar">IMPAR</string>
+    <string name="score">SCORE</string>
+    <string name="par">PAR!</string>
+    <string name="impar">IMPAR!</string>
+    <string name="rolls_text">TIRADAS</string>
+    <string name="player_name">PLAYER</string>
+
+    <!-- Preference Titles -->
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- FinalScreen Activity -->
     <string name="puntuacion_actual">Puntuación Actual: %1$d</string>
     <string name="record">Récord: %1$d</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>
