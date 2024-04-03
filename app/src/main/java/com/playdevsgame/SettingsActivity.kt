@@ -7,8 +7,14 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import android.app.AlertDialog
 import androidx.core.text.HtmlCompat
+import DatabaseHandler
+import android.util.Log
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class SettingsActivity : AppCompatActivity() {
+
+    private lateinit var databaseHandler: DatabaseHandler // Agregar una instancia de DatabaseHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,10 +43,46 @@ class SettingsActivity : AppCompatActivity() {
             showInstructionsDialog()
         }
 
+        val buttonShowHistory = findViewById<Button>(R.id.historyButton)
+        buttonShowHistory.setOnClickListener {
+            getHistoryList()
+        }
+
         backButton.setOnClickListener {
             onBackPressed()
         }
     }
+
+    private fun showHistoryDialog(history: String) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setTitle("Historial de Partidas")
+        alertDialogBuilder.setMessage(history)
+        alertDialogBuilder.setPositiveButton("Aceptar") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
+    private fun getHistoryList() {
+        val db = DatabaseHandler(this)
+        db.getAllScoreData()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ scores ->
+                // Aquí recibimos la lista de partidas y la mostramos en el cuadro de diálogo
+                val historyList = StringBuilder()
+                for ((playerName, score) in scores) {
+                    historyList.append("Jugador: $playerName, Puntuación: $score\n")
+                }
+                showHistoryDialog(historyList.toString())
+            }, { error ->
+                // Manejar el error si ocurre
+                Log.e("SettingsActivity", "Error al obtener datos de la base de datos: ${error.message}")
+            })
+    }
+
     private fun showInstructionsDialog() {
         val instructions = "<font color='#000000'><big>1. El jugador cuenta con 10 tiradas de dados para conseguir obtener la puntuación más alta posible.</big></font><br/>" +
                 "<font color='#000000'><big>2. Se empieza el juego con 0 puntos y en cada tirada se debe adivinar si el resultado de los dados será par o impar.</big></font><br/>" +

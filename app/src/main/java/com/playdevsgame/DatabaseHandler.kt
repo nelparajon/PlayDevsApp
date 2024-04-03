@@ -84,7 +84,7 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
             //así se realiza la operación de manera asícrona al hilo principal
         }.subscribeOn(Schedulers.io())
     }
-    //lo mismo que antes pero para todos los registros de la base de datos.
+    /*//lo mismo que antes pero para todos los registros de la base de datos.
     //esta función es de pruebas de acceso y extracción de datos de la BD. Se podría usar si se fuese necesario
     fun getAllScoreData(): Single<MutableList<Int>> {
         return Single.fromCallable {
@@ -107,6 +107,32 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
             cursor?.close()
             db.close()
 
+            scores
+        }.subscribeOn(Schedulers.io())
+    }*/
+
+    fun getAllScoreData(): Single<MutableList<Pair<String, Int>>> {
+        return Single.fromCallable {
+            val db = readableDatabase
+            val scores = mutableListOf<Pair<String, Int>>()
+            val cursor: Cursor? = db.rawQuery("SELECT player_name, score FROM game_history", null)
+
+            cursor?.use {
+                while (cursor.moveToNext()) {
+                    val playerNameIndex = cursor.getColumnIndex("player_name")
+                    val scoreIndex = cursor.getColumnIndex("score")
+                    Log.d("MOSTRAR RESULTADOS", "MOSTRAR RESULTADOS")
+                    if (playerNameIndex != -1 && scoreIndex != -1) {
+                        val playerName = cursor.getString(playerNameIndex)
+                        val score = cursor.getInt(scoreIndex)
+                        scores.add(Pair(playerName, score))
+                    } else {
+                        Log.e("DatabaseHelper", "Error al obtener datos: Índices de columna incorrectos")
+                    }
+                }
+            }
+            cursor?.close()
+            db.close()
             scores
         }.subscribeOn(Schedulers.io())
     }
