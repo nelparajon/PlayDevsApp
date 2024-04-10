@@ -10,6 +10,7 @@ import androidx.core.text.HtmlCompat
 import DatabaseHandler
 import android.content.Intent
 import android.util.Log
+import android.widget.CheckBox
 import android.widget.ImageButton
 import com.google.android.material.appbar.MaterialToolbar
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -18,10 +19,27 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var databaseHandler: DatabaseHandler // Agregar una instancia de DatabaseHandler
+    private lateinit var musicCheckBox: CheckBox
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
+
+        // Inicialización y configuración del CheckBox
+        musicCheckBox = findViewById(R.id.musicCheckBox)
+        // Establecer el estado inicial del CheckBox como marcado
+        musicCheckBox.isChecked = true
+
+        // Establecer el listener para manejar cambios en el estado del CheckBox
+        musicCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                // Iniciar el servicio de reproducción de música si el CheckBox está marcado
+                startMusicService()
+            } else {
+                // Detener el servicio de reproducción de música si el CheckBox no está marcado
+                stopMusicService()
+            }
+        }
 
         val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -69,6 +87,16 @@ class SettingsActivity : AppCompatActivity() {
         backButton.setOnClickListener {
             onBackPressed()
         }
+    }
+
+    private fun startMusicService() {
+        val intent = Intent(this, AudioPlaybackService::class.java)
+        startService(intent)
+    }
+
+    private fun stopMusicService() {
+        val intent = Intent(this, AudioPlaybackService::class.java)
+        stopService(intent)
     }
 
     private fun showHistoryDialog(history: String) {
