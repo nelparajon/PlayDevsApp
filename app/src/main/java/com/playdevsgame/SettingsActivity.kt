@@ -47,12 +47,14 @@ class SettingsActivity : AppCompatActivity() {
         val homeButton: ImageButton = findViewById(R.id.homeButton)
         homeButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             startActivity(intent)
         }
 
         val settingsButton: ImageButton = findViewById(R.id.settingsButton)
         settingsButton.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             startActivity(intent)
         }
 

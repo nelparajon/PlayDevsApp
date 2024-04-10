@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity() {
         val btnSettings: Button = findViewById(R.id.settingsButton)
         btnSettings.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             startActivity(intent)
         }
     }

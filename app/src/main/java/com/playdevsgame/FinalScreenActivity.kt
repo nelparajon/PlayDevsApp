@@ -35,6 +35,7 @@ class FinalScreenActivity : AppCompatActivity() {
         val settingsButton: ImageView = findViewById(R.id.botonSettings)
         settingsButton.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             startActivity(intent)
         }
 
