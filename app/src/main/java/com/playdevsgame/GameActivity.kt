@@ -1,6 +1,5 @@
 package com.playdevsgame
 
-import DatabaseHandler
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -16,7 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
-import io.reactivex.rxjava3.schedulers.Schedulers
+
 
 
 class GameActivity : AppCompatActivity() {
@@ -39,8 +38,6 @@ class GameActivity : AppCompatActivity() {
 
     private lateinit var playerTextView: TextView
 
-    private lateinit var databaseHandler: DatabaseHandler
-
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -48,8 +45,6 @@ class GameActivity : AppCompatActivity() {
         setContentView(R.layout.activity_game)
 
         initializateViews()
-
-        databaseHandler = DatabaseHandler(this)
 
         var textViewPar = findViewById<TextView>(R.id.parText)
         var textViewImpar = findViewById<TextView>(R.id.imparText)
@@ -267,32 +262,21 @@ class GameActivity : AppCompatActivity() {
     private fun updateRollsRemaining(totalRolls: Int, clickCount: Int, textView: TextView) {
         var rollsRemaining = totalRolls - clickCount
         textView.text = "$rollsRemaining"
-        // Después de la última tirada
         if (rollsRemaining == 0) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                openFinalScreenActivity()
-            }, 2000) // Cambia el valor 2000 por el tiempo en milisegundos que desees de retraso
+            openFinalScreenActivity()
         }
+
+
     }
+
     private fun openFinalScreenActivity() {
         Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT).show()
-
-        // Guardar la puntuación y actualizar el récord
-        val playerName = PreferenceManager.getPlayerName(this)
-        val score = textViewScore.text.toString().toInt()
-        databaseHandler.saveScoreAndCheckRecord(playerName, score)
-            .subscribe({
-                Log.d("GameActivity", "Puntuación guardada en la base de datos y récord actualizado")
-                val intent = Intent(this@GameActivity, FinalScreenActivity::class.java)
-                intent.putExtra("EXTRA_SCORE", score)
-                startActivity(intent)
-            }, { error ->
-                Log.e("GameActivity", "Error al guardar la puntuación y actualizar el récord: $error")
-            })
+        val intent = Intent(this@GameActivity, FinalScreenActivity::class.java)
+        intent.putExtra("EXTRA_SCORE", score) // Variable 'score'
+        startActivity(intent)
+        finish()
     }
 }
-
-
 
 //función para cambiar a la siguiente activity(pantalla puntuación)
 //además se le pasa la variable de puntuación para poder usarla en la siguiente activity

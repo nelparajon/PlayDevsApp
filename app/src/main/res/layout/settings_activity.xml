@@ -9,6 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!--    toolbar-->
+        <include
+            layout="@layout/toolbar_custom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <Button
             android:id="@+id/instructionsButton"
             style="@style/PlayBtn"
@@ -22,6 +28,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.674" />
+
+        <Button
+            android:id="@+id/historyButton"
+            style="@style/PlayBtn"
+            android:layout_width="335dp"
+            android:layout_height="57dp"
+            android:onClick="onHistoryClick"
+            android:text="Registro de partidas"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.795" />
 
         <CheckBox
             android:id="@+id/efectosCheckBox"
@@ -39,15 +58,15 @@
         <TextView
             android:id="@+id/sfTextView"
             style="@style/PlayBtn"
-            android:layout_width="104dp"
-            android:layout_height="39dp"
+            android:layout_width="111dp"
+            android:layout_height="35dp"
             android:text="Efectos"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.133"
+            app:layout_constraintHorizontal_bias="0.136"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.552" />
+            app:layout_constraintVertical_bias="0.553" />
 
         <TextView
             android:id="@+id/volumenTextView"
@@ -87,7 +106,7 @@
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.851" />
+            app:layout_constraintVertical_bias="0.938" />
 
         <TextView
             android:id="@+id/playerNameTextView"

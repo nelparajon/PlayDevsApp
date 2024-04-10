@@ -136,23 +136,4 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
         }.subscribeOn(Schedulers.io())
     }
 
-    fun saveScoreAndCheckRecord(playerName: String, score: Int): Completable {
-        return Completable.fromAction {
-            val db = writableDatabase
-            val contentValues = ContentValues()
-            contentValues.put("player_name", playerName)
-            contentValues.put("score", score)
-            val insertedRowId = db.insert("game_history", null, contentValues)
-            db.close()
-
-            Log.d("DatabaseHelper", "Registro insertado en la base de datos. ID: $insertedRowId, Nombre: $playerName, Puntuación: $score")
-
-            // Verificar y actualizar el récord si es necesario
-            val highScore = getRecordScoreData().blockingGet() // Obtiene el récord actual de manera sincrónica
-            if (score > highScore) {
-                updateRecordScore(score).blockingAwait() // Actualiza el récord de manera sincrónica
-            }
-        }.subscribeOn(Schedulers.io())
-    }
-
 }
