@@ -2,21 +2,36 @@ package com.playdevsgame
 
 import DatabaseHandler
 import android.annotation.SuppressLint
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
+import android.media.AudioManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Button
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var databaseHandler: DatabaseHandler
+    /*private var mediaPlayer: MediaPlayer? = null*/
 
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // En MainActivity o GameActivity donde inicies el servicio
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (!isMyServiceRunning(AudioPlaybackService::class.java)) {
+                val serviceIntent = Intent(this, AudioPlaybackService::class.java)
+                startService(serviceIntent)
+            }
+        }, 1000) // Retrasa el inicio del servicio 1 segundo.
+
         databaseHandler = DatabaseHandler(this)
         databaseHandler.writableDatabase
 
@@ -50,5 +65,23 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    // Función auxiliar para verificar si el servicio está en ejecución
+    private fun Context.isMyServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+
+        // Detener el servicio de reproducción de audio
+        val intent = Intent(this, AudioPlaybackService::class.java)
+        stopService(intent)
     }
 }
