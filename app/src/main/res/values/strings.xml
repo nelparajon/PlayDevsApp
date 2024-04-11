@@ -1,17 +1,21 @@
-<resources>
-<!-- Nombre aplicación -->
+
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Application name -->
 <string name="app_name">PlayDevsGame</string>
 
 <!-- Main Activity -->
 <string name="btn_play">PLAY</string>
+    <string name="settingsButton">SETTINGS</string>
+
 
 <!-- Game Activity -->
-<string name="btn_par">PAR</string>
-<string name="btn_impar">IMPAR</string>
+<string name="btn_par">EVEN</string>
+<string name="btn_impar">ODD</string>
 <string name="score">SCORE</string>
-<string name="par">PAR!</string>
-<string name="impar">IMPAR!</string>
-<string name="rolls_text">TIRADAS</string>
+<string name="par">EVEN!</string>
+<string name="impar">ODD!</string>
+<string name="rolls_text">ROLLS</string>
 <string name="player_name">PLAYER</string>
 
 <!-- Preference Titles -->
@@ -20,8 +24,9 @@
 <string name="sync_header">Sync</string>
 
 <!-- FinalScreen Activity -->
-<string name="puntuacion_actual">Puntuación Actual: %1$d</string>
-<string name="record">Récord: %1$d</string>
+<string name="puntuacion_actual">Current Score:: %1$d</string>
+<string name="record">Record: %1$d</string>
+    <string name="botonSettings">New Game</string>
 
 <!-- Messages Preferences -->
 <string name="signature_title">Your signature</string>
@@ -36,4 +41,24 @@
     <string name="logo_description" />
     <string name="settings" />
     <string name="home" />
-</resources>
+
+    <!-- Settings -->
+
+    <string name="instrucciones_del_juego">Game instructions</string>
+    <string name="registro_de_partidas">Game History</string>
+    <string name="activado">Enabled</string>
+    <string name="efectos">Effects</string>
+    <string name="volumen">Volume</string>
+    <string name="m_sica">Music</string>
+    <string name="volver">RETURN</string>
+    <string name="nombre_del_jugador">Player Name</string>
+
+    <string name="instructions" tools:ignore="StringEscaping">
+    <![CDATA[
+        <font color=\'#000000\'><big>1. The player has 10 dice rolls to achieve the highest possible score.</big></font><br/>
+        <font color=\'#000000\'><big>2. The game starts with 0 points, and on each roll, the player must guess if the dice result will be even or odd.</big></font><br/>
+        <font color=\'#000000\'><big>3. If the guess is correct, 10 points are awarded. Failing does not result in point loss.</big></font>
+    ]]>
+</string>
+
+ </resources>

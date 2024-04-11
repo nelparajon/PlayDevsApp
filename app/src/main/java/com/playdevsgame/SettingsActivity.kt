@@ -6,13 +6,34 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import android.app.AlertDialog
+import android.content.Intent
+import android.widget.ImageButton
 import androidx.core.text.HtmlCompat
+import com.google.android.material.appbar.MaterialToolbar
+
+
+
 
 class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
+
+        val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        val homeButton: ImageButton = findViewById(R.id.homeButton)
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        val settingsButton: ImageButton = findViewById(R.id.settingsButton)
+        settingsButton.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
 
         val playerNameEditText: EditText = findViewById(R.id.playerNameEditText)
         val backButton: Button = findViewById(R.id.backButton)
@@ -42,9 +63,7 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
     private fun showInstructionsDialog() {
-        val instructions = "<font color='#000000'><big>1. El jugador cuenta con 10 tiradas de dados para conseguir obtener la puntuación más alta posible.</big></font><br/>" +
-                "<font color='#000000'><big>2. Se empieza el juego con 0 puntos y en cada tirada se debe adivinar si el resultado de los dados será par o impar.</big></font><br/>" +
-                "<font color='#000000'><big>3. Si se acierta el resultado, se otorgan 10 puntos. Fallar no conlleva pérdida de puntos.</big></font>"
+        val instructions = getString(R.string.instructions)
 
         val alertDialogBuilder = AlertDialog.Builder(this)
         alertDialogBuilder.setTitle(HtmlCompat.fromHtml("<big>Instrucciones del Juego</big>", HtmlCompat.FROM_HTML_MODE_LEGACY))
@@ -56,5 +75,4 @@ class SettingsActivity : AppCompatActivity() {
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
-
 }

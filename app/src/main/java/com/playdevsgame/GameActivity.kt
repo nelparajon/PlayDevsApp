@@ -15,7 +15,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
-
+import DatabaseHandler
+import android.widget.ImageButton
+import com.google.android.material.appbar.MaterialToolbar
 
 
 class GameActivity : AppCompatActivity() {
@@ -34,9 +36,9 @@ class GameActivity : AppCompatActivity() {
     private lateinit var parText: TextView
     private lateinit var imparText: TextView
     private var score = 0
-
-
     private lateinit var playerTextView: TextView
+    private lateinit var databaseHandler: DatabaseHandler // Agregar una instancia de DatabaseHandler
+
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,10 +46,25 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
+        val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        val homeButton: ImageButton = findViewById(R.id.homeButton)
+        homeButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
+        val settingsButton: ImageButton = findViewById(R.id.settingsButton)
+        settingsButton.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+
         initializateViews()
 
-        var textViewPar = findViewById<TextView>(R.id.parText)
-        var textViewImpar = findViewById<TextView>(R.id.imparText)
+        databaseHandler = DatabaseHandler(this) // Inicializar la instancia de DatabaseHandler
+        databaseHandler.writableDatabase
 
         playerTextView = findViewById(R.id.playerText)
 
@@ -110,8 +127,12 @@ class GameActivity : AppCompatActivity() {
         //textViewCode.text = "$diceRollSum"
         val success: Boolean = diceRollSum % 2 == 0
         updateUIScore(success)
+
+
         //retrasamos la activación de los dados durante 0,9 segundos
-        activateBtns()
+        if ((totalRolls - clickCount) > 0) {
+            activateBtns()
+        }
     }
 
     //onClic del boton impar
@@ -133,7 +154,9 @@ class GameActivity : AppCompatActivity() {
         var success: Boolean = diceRollSum % 2 != 0
         updateUIScore(success)
 
-        activateBtns()
+        if ((totalRolls - clickCount) > 0) {
+            activateBtns()
+        }
 
     }
 
@@ -238,12 +261,9 @@ class GameActivity : AppCompatActivity() {
         // Si el jugador acierta, el puntaje se suma en 10
         if (success) {
             score += 10
-
+            this.score = score
             Log.d("TAG", "El jugador ha acertado, puntaje establecido en 10")
         }
-
-        // Guardar el puntaje actualizado
-        this.score = score
 
         Log.d("TAG", "Puntaje final: $score")
         return score
@@ -263,14 +283,24 @@ class GameActivity : AppCompatActivity() {
         var rollsRemaining = totalRolls - clickCount
         textView.text = "$rollsRemaining"
         if (rollsRemaining == 0) {
-            openFinalScreenActivity()
+            Handler(Looper.getMainLooper()).postDelayed({
+                openFinalScreenActivity()
+            }, 3000) // Espera 1 segundo (1000 milisegundos)
         }
+    }
 
-
+    private fun insertScoreInBD(finalScore: Int) {
+        val playerName = PreferenceManager.getPlayerName(this)
+        val db = databaseHandler.writableDatabase
+        databaseHandler.insertData(playerName, finalScore).subscribe {
+            Log.d("MainActivity", "Registro insertado correctamente")
+        }
+        db.close()
     }
 
     private fun openFinalScreenActivity() {
-        Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT).show()
+        insertScoreInBD(score)
+        databaseHandler.checkGameHistory()
         val intent = Intent(this@GameActivity, FinalScreenActivity::class.java)
         intent.putExtra("EXTRA_SCORE", score) // Variable 'score'
         startActivity(intent)
@@ -289,5 +319,3 @@ class GameActivity : AppCompatActivity() {
 //startActivity(intent)
 //finish()
 //Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT)
-
-
