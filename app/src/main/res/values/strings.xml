@@ -53,6 +53,9 @@
     <string name="volver">RETURN</string>
     <string name="nombre_del_jugador">Player Name</string>
 
+    <string name="dialog_title_instructions">Game Instructions</string>
+    <string name="dialog_button_accept">Accept</string>
+
     <string name="instructions" tools:ignore="StringEscaping">
     <![CDATA[
         <font color=\'#000000\'><big>1. The player has 10 dice rolls to achieve the highest possible score.</big></font><br/>

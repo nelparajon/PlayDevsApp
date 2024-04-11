@@ -62,13 +62,27 @@ class SettingsActivity : AppCompatActivity() {
             onBackPressed()
         }
     }
-    private fun showInstructionsDialog() {
+
+    fun showInstructionsDialog() {
         val instructions = getString(R.string.instructions)
 
         val alertDialogBuilder = AlertDialog.Builder(this)
-        alertDialogBuilder.setTitle(HtmlCompat.fromHtml("<big>Instrucciones del Juego</big>", HtmlCompat.FROM_HTML_MODE_LEGACY))
-        alertDialogBuilder.setMessage(HtmlCompat.fromHtml(instructions, HtmlCompat.FROM_HTML_MODE_LEGACY))
-        alertDialogBuilder.setPositiveButton("Aceptar") { dialog, _ ->
+        val title = getString(R.string.dialog_title_instructions)
+        val acceptText = getString(R.string.dialog_button_accept)
+
+        alertDialogBuilder.setTitle(
+            HtmlCompat.fromHtml(
+                "<big>$title</big>",
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
+        )
+        alertDialogBuilder.setMessage(
+            HtmlCompat.fromHtml(
+                instructions,
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
+        )
+        alertDialogBuilder.setPositiveButton(acceptText) { dialog, _ ->
             dialog.dismiss()
         }
 

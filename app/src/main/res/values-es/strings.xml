@@ -52,6 +52,9 @@
     <string name="volver">VOLVER</string>
     <string name="nombre_del_jugador">Nombre del Jugador</string>
 
+    <string name="dialog_title_instructions">Instrucciones del Juego</string>
+    <string name="dialog_button_accept">Aceptar</string>
+
     <string name="instructions" tools:ignore="StringEscaping">
     <![CDATA[
         <font color=\'#000000\'><big>1. El jugador tiene 10 lanzamientos de dados para lograr la puntuación más alta posible.</big></font><br/>
