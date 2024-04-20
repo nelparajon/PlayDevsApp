@@ -46,4 +46,6 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation ("io.reactivex.rxjava3:rxjava:3.0.13")
     implementation ("io.reactivex.rxjava3:rxandroid:3.0.0")
+    implementation ("com.google.android.gms:play-services-location:20.0.0")
+
 }
