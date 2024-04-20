@@ -7,20 +7,41 @@
     android:padding="50dp"
     android:background="#7d14f5">
 
+<!--    toolbar-->
+
+<!--    <include
+        layout="@layout/toolbar_custom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />-->
+
+
+    <ImageView
+        android:id="@+id/botonSettings"
+        android:layout_width="43dp"
+        android:layout_height="44dp"
+        android:elevation="50dp"
+        android:src="@drawable/baseline_settings_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+    <!-- Botón Nueva Partida -->
+
     <ImageView
         android:id="@+id/diceImageView"
         android:layout_width="290dp"
         android:layout_height="338dp"
         android:background="@drawable/play_devs_logo_proto"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="20dp"
-        tools:layout_editor_absoluteY="-30dp" />
+        tools:layout_editor_absoluteX="28dp"
+        tools:layout_editor_absoluteY="74dp" />
 
-
-
-    <!-- Botón Nueva Partida -->
     <Button
-        android:id="@+id/newGameButton"
+        android:id="@+id/NewGameButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
@@ -34,34 +55,32 @@
 
     <!-- Puntuación Actual -->
 
+
+    <!-- Récord -->
     <TextView
         android:id="@+id/scoreTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
         android:text="0"
         android:textColor="#E3F6F6"
         android:textSize="30sp"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/newGameButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/NewGameButton" />
 
-
-
-    <!-- Récord -->
     <TextView
-        android:id="@+id/highScoreTextView"
+        android:id="@+id/HighScoreTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="28dp"
+        android:gravity="center"
         android:text="0"
         android:textColor="#E3F6F6"
         android:textSize="30sp"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@+id/scoreTextView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/scoreTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
