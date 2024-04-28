@@ -17,58 +17,53 @@ import android.widget.Button
 class MainActivity : AppCompatActivity() {
 
     private lateinit var databaseHandler: DatabaseHandler
-    /*private var mediaPlayer: MediaPlayer? = null*/
 
-    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // En MainActivity o GameActivity donde inicies el servicio
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (!isMyServiceRunning(AudioPlaybackService::class.java)) {
-                val serviceIntent = Intent(this, AudioPlaybackService::class.java)
-                startService(serviceIntent)
-            }
-        }, 1000) // Retrasa el inicio del servicio 1 segundo.
+        // Start the audio service if it's not already running
+        startAudioServiceIfNeeded()
 
         databaseHandler = DatabaseHandler(this)
         databaseHandler.writableDatabase
 
-        /*databaseHandler.insertData(PreferenceManager.getPlayerName(this), 10).subscribe {
-            Log.d("MainActivity", "Registro insertado correctamente")
-        }*/
+        // Fetch high score and handle data
         databaseHandler.getRecordScoreData()
             .subscribe({ highScore ->
-                // Aquí puedes mostrar el récord de puntuación en la actividad principal si lo deseas
                 Log.d("MainActivity", "High Score: $highScore")
-            }, { error ->
-                // Manejar el error si ocurre
+            }, {
+                // Handle error if occurs
+                Log.e("MainActivity", "Error fetching high score", it)
             })
 
-        // Verificar si el nombre de jugador predeterminado ya está configurado en SharedPreferences
-        val playerName = PreferenceManager.getPlayerName(this)
-
-        // Si el nombre de jugador predeterminado no está configurado, establecerlo como "player"
-        if (playerName.isNullOrEmpty()) {
-            PreferenceManager.savePlayerName(this, "player")
-        }
+        setupDefaultPlayerName()
 
         val btnPlay: Button = findViewById(R.id.myButton)
         btnPlay.setOnClickListener {
-            val intent = Intent(this, GameActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, GameActivity::class.java))
         }
 
         val btnSettings: Button = findViewById(R.id.settingsButton)
         btnSettings.setOnClickListener {
-            val intent = Intent(this, SettingsActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-            startActivity(intent)
+            startActivity(Intent(this, SettingsActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            })
         }
     }
 
-    // Función auxiliar para verificar si el servicio está en ejecución
+    private fun startAudioServiceIfNeeded() {
+        if (!isMyServiceRunning(AudioPlaybackService::class.java)) {
+            startService(Intent(this, AudioPlaybackService::class.java))
+        }
+    }
+
+    private fun setupDefaultPlayerName() {
+        val playerName = PreferenceManager.getPlayerName(this)
+        if (playerName.isNullOrEmpty()) {
+            PreferenceManager.savePlayerName(this, "player")
+        }
+    }
     private fun Context.isMyServiceRunning(serviceClass: Class<*>): Boolean {
         val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -82,7 +77,6 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
 
         // Detener el servicio de reproducción de audio
-        val intent = Intent(this, AudioPlaybackService::class.java)
-        stopService(intent)
+        stopService(Intent(this, AudioPlaybackService::class.java))
     }
 }

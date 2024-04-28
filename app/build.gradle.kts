@@ -47,4 +47,7 @@ dependencies {
     implementation ("io.reactivex.rxjava3:rxjava:3.0.13")
     implementation ("io.reactivex.rxjava3:rxandroid:3.0.0")
     implementation ("com.google.android.exoplayer:exoplayer-core:2.19.1")
+    implementation ("androidx.lifecycle:lifecycle-extensions:2.2.0")
+    implementation ("androidx.lifecycle:lifecycle-common-java8:2.2.0")
+    implementation ("androidx.lifecycle:lifecycle-service:2.2.0")
 }
