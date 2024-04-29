@@ -2,9 +2,9 @@ package com.playdevsgame
 
 import DatabaseHandler
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +12,10 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+
+
 
 class MainActivity : AppCompatActivity() {
     // Definir constantes para los códigos de solicitud de permisos
@@ -20,92 +24,46 @@ class MainActivity : AppCompatActivity() {
         private const val PERMISSIONS_REQUEST_ACCESS_BACKGROUND_LOCATION = 101
     }
 
-
-    private fun requestLocationPermissions() {
-        val hasFineLocationPermission = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-
-        val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
-
-        if (hasFineLocationPermission) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                // Para Android 10 y superior, solicita también el permiso de ubicación en segundo plano
-                val hasBackgroundLocationPermission = ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-
-                if (!hasBackgroundLocationPermission) {
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
-                        PERMISSIONS_REQUEST_ACCESS_BACKGROUND_LOCATION
-                    )
-                }
-            }
-        } else {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
-            )
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permiso concedido
-            } else {
-                // Permiso denegado
-            }
-        } else if (requestCode == PERMISSIONS_REQUEST_ACCESS_BACKGROUND_LOCATION) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permiso concedido
-            } else {
-                // Permiso denegado
-            }
-        }
-    }
-
-
-
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var databaseHandler: DatabaseHandler
 
-    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        databaseHandler = DatabaseHandler(this)
-        databaseHandler.writableDatabase
-
         requestLocationPermissions()
 
-        /*databaseHandler.insertData(PreferenceManager.getPlayerName(this), 10).subscribe {
-            Log.d("MainActivity", "Registro insertado correctamente")
-        }*/
+        // Inicializar FusedLocationProviderClient
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        // Inicializar DatabaseHandler
+        databaseHandler = DatabaseHandler(this)
+
+        // Solicitar permisos de ubicación
+        requestLocationPermissions()
+
+        // Ejemplo de cómo utilizar DatabaseHandler para obtener datos
         databaseHandler.getRecordScoreData()
             .subscribe({ highScore ->
-                // Aquí puedes mostrar el récord de puntuación en la actividad principal si lo deseas
                 Log.d("MainActivity", "High Score: $highScore")
             }, { error ->
-                // Manejar el error si ocurre
+                Log.e("MainActivity", "Error al obtener el récord de puntuación", error)
             })
 
-        // Verificar si el nombre de jugador predeterminado ya está configurado en SharedPreferences
-        val playerName = PreferenceManager.getPlayerName(this)
+        // Configurar SharedPreferences
+        setupPlayerName()
 
-        // Si el nombre de jugador predeterminado no está configurado, establecerlo como "player"
+        // Configurar botones
+        setupButtons()
+    }
+
+    private fun setupPlayerName() {
+        val playerName = PreferenceManager.getPlayerName(this)
         if (playerName.isNullOrEmpty()) {
             PreferenceManager.savePlayerName(this, "player")
         }
+    }
 
+    private fun setupButtons() {
         val btnPlay: Button = findViewById(R.id.myButton)
         btnPlay.setOnClickListener {
             val intent = Intent(this, GameActivity::class.java)
@@ -118,4 +76,87 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    private fun requestLocationPermissions() {
+        val hasFineLocationPermission = ContextCompat.checkSelfPermission(
+            this, Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
+
+        val hasCoarseLocationPermission = ContextCompat.checkSelfPermission(
+            this, Manifest.permission.ACCESS_COARSE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
+
+        val shouldRequestBackgroundPermission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+                ContextCompat.checkSelfPermission(
+                    this, Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+
+        val permissionsToRequest = mutableListOf<String>()
+        if (!hasFineLocationPermission) {
+            permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+        if (!hasCoarseLocationPermission) {
+            permissionsToRequest.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+        }
+        if (shouldRequestBackgroundPermission) {
+            permissionsToRequest.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
+            ActivityCompat.requestPermissions(
+                this, permissionsToRequest.toTypedArray(), PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
+            )
+        } else {
+            Log.d("MainActivity", "All necessary permissions are already granted.")
+        }
+    }
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("MainActivity", "Permiso de ubicación en primer plano concedido")
+                    getLastLocationAndSave()
+                } else {
+                    Log.e("MainActivity", "Permiso de ubicación en primer plano denegado")
+                }
+            }
+            PERMISSIONS_REQUEST_ACCESS_BACKGROUND_LOCATION -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("MainActivity", "Permiso de ubicación en segundo plano concedido")
+                } else {
+                    Log.e("MainActivity", "Permiso de ubicación en segundo plano denegado")
+                }
+            }
+        }
+    }
+
+
+    private fun getLastLocationAndSave() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+            if (location != null) {
+                databaseHandler.insertLocation(location.latitude, location.longitude).subscribe({
+                    Log.d(
+                        "MainActivity",
+                        "Ubicación guardada correctamente: Lat ${location.latitude}, Lon ${location.longitude}"
+                    )
+                }, { error ->
+                    Log.e("MainActivity", "Error al guardar la ubicación", error)
+                })
+            } else {
+                Log.e("MainActivity", "Error: La ubicación recibida es nula")
+            }
+        }
+    }
 }
+
+

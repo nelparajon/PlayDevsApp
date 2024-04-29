@@ -24,7 +24,8 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
     override fun onCreate(db: SQLiteDatabase?) {
         //utilizamos  en el contexto de kotlin para indicarle que acceda al método execSQL() si no es nulo.
 
-        db?.execSQL("CREATE TABLE IF NOT EXISTS game_history(id_history INTEGER PRIMARY KEY AUTOINCREMENT, player_name TEXT NOT NULL, score INTEGER NOT NULL)")
+        db?.execSQL("CREATE TABLE IF NOT EXISTS game_history(id_history INTEGER PRIMARY KEY AUTOINCREMENT, player_name TEXT NOT NULL, score INTEGER NOT NULL,latitude REAL NOT NULL,\n" +
+                "                longitude REAL NOT NULL)")
         Log.d("DatabaseHelper", "Tabla creada")
         // Verificar la creación de la tabla
         /*if (tableExists("game_history", db)) {
@@ -53,6 +54,7 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
 
             Log.d("DatabaseHelper", "Registro insertado en la base de datos. ID: $insertedRowId, Nombre: $playerName, Puntuación: $score")
         }.subscribeOn(Schedulers.io())
+
 
 
     }
@@ -193,6 +195,18 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
             }
         }
         db.close()
+    }
+
+    fun insertLocation(latitude: Double, longitude: Double): Completable {
+        return Completable.fromAction {
+            val db = writableDatabase
+            val contentValues = ContentValues().apply {
+                put("latitude", latitude)
+                put("longitude", longitude)
+            }
+            db.insert("game_history", null, contentValues)
+            db.close()
+        }.subscribeOn(Schedulers.io())
     }
 
 
