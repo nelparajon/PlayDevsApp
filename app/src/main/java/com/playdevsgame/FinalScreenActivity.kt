@@ -3,10 +3,14 @@ package com.playdevsgame
 import DatabaseHandler
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.icu.util.TimeZone
 import android.os.Bundle
+import android.provider.CalendarContract
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -15,10 +19,13 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.rxjava3.schedulers.Schedulers
 
+
 class FinalScreenActivity : AppCompatActivity() {
 
     private lateinit var databaseHandler: DatabaseHandler
     private lateinit var currentBitmap: Bitmap
+    private lateinit var contentResolver: ContentResolver
+
 
     companion object {
         private const val REQUEST_CREATE_FILE = 1
@@ -60,6 +67,7 @@ class FinalScreenActivity : AppCompatActivity() {
 
         // Verificar si la puntuación supera al récord actual
         val highScoreTextView: TextView = findViewById(R.id.HighScoreTextView)
+
         databaseHandler.getRecordScoreData()
             .subscribeOn(Schedulers.io())
             .subscribe({ highScore ->
@@ -74,7 +82,7 @@ class FinalScreenActivity : AppCompatActivity() {
                 Log.e("FinalScreenActivity", "Error al obtener el récord: $error")
             })
         databaseHandler.checkGameHistory()
-
+        storeVictoryInCalendar(score, highScoreTextView.toString())
         val captureButton: Button = findViewById(R.id.captureButton)
         captureButton.setOnClickListener {
             val bitmap = getScreenBitmap()
@@ -87,7 +95,7 @@ class FinalScreenActivity : AppCompatActivity() {
         }
     }
 
-    private fun getScreenBitmap(): Bitmap? {
+    private fun getScreenBitmap(): Bitmap {
 
         val buttonToHide: Button = findViewById(R.id.NewGameButton)
         val settingsButtonToHide: Button = findViewById(R.id.settingsButton)
@@ -126,6 +134,30 @@ class FinalScreenActivity : AppCompatActivity() {
                 } ?: Log.e("FinalScreenActivity", "No se pudo abrir el OutputStream.")
             } ?: Log.e("FinalScreenActivity", "Data URI is null.")
         }
+    }
+
+    private fun storeVictoryInCalendar(score: Int, highScore: String){
+        contentResolver = getContentResolver()
+        val values = ContentValues()
+        val victoryTime = System.currentTimeMillis()
+
+
+
+        values.put(CalendarContract.Events.CALENDAR_ID, 1) // ID del dispositivo
+        values.put(CalendarContract.Events.DTSTART, victoryTime)
+        values.put(CalendarContract.Events.TITLE, "Victoría en PlayDevs Get Success!!")
+        values.put(CalendarContract.Events.DESCRIPTION, "Puntuación Obtenida: $score")
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getID())
+
+// Usar el URI correcto para los eventos
+        val uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
+
+        if(uri != null){
+            Log.d("Calendar", "Evento añadido con URI: ${uri.toString()}")
+        } else {
+            Log.e("Calendar", "Error al añadir evento")
+        }
+
     }
 
 }

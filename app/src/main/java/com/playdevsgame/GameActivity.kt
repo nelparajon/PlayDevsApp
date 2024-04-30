@@ -1,22 +1,29 @@
 package com.playdevsgame
 
+import DatabaseHandler
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.ContentResolver
+import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.icu.util.TimeZone
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.CalendarContract
 import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Button
-import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import android.content.Intent
-import DatabaseHandler
-import android.widget.ImageButton
 import com.google.android.material.appbar.MaterialToolbar
 
 
@@ -37,9 +44,15 @@ class GameActivity : AppCompatActivity() {
     private lateinit var imparText: TextView
     private var score = 0
     private lateinit var playerTextView: TextView
-    private lateinit var databaseHandler: DatabaseHandler // Agregar una instancia de DatabaseHandler
+    private lateinit var databaseHandler: DatabaseHandler
+    private var initTime: Long = 0
+    private var endTime: Long = 0
+    private var isRunning: Boolean = false;
+    private lateinit var contentResolver: ContentResolver
 
-
+    companion object {
+        const val PERMISSION_REQUEST_CODE = 101 // Código para identificar la solicitud de permisos
+    }
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -80,6 +93,11 @@ class GameActivity : AppCompatActivity() {
 
                 clickCount++
 
+
+                if (clickCount == 10){
+                    checkCalendarPermission()
+
+                }
                 updateRollsRemaining(totalRolls, clickCount, viewRollsText)
 
                 //bucle que pasa a la siguiente activity(pantalla puntuación) cuando se acabe el contador de clics
@@ -98,8 +116,13 @@ class GameActivity : AppCompatActivity() {
                 onClicImparBtn()
 
                 clickCount++
+                if (clickCount == 10){
+                    checkCalendarPermission()
 
+                }
                 updateRollsRemaining(totalRolls, clickCount, viewRollsText)
+
+
 
                 //bucle que pasa a la siguiente activity(pantalla puntuación) cuando se acabe el contador de clics
                 /* if(clickCount == 10){
@@ -107,6 +130,8 @@ class GameActivity : AppCompatActivity() {
                 }*/
 
             }
+
+            //elapsedTime(clickCount)
         }
 
     }
@@ -159,6 +184,31 @@ class GameActivity : AppCompatActivity() {
         }
 
     }
+
+    private fun elapsedTime(clickCount: Int): Long {
+        return when (clickCount) {
+            1 -> {
+                initTime = System.currentTimeMillis()
+                0 // No se devuelve ninguna diferencia porque solo se ha establecido initTime
+            }
+            10 -> {
+                endTime = System.currentTimeMillis()
+                if (endTime > initTime) {
+                    endTime - initTime
+                } else {
+                    0 // Devuelve 0 si endTime es menor que initTime
+                }
+            }
+            else -> {
+                // Si clickCount no es 1 ni 10, devuelve 0
+                0
+            }
+        }
+    }
+
+
+
+
 
     //función que se usará para desahabilitar los botones durante la animación
     //evitando colapso al pulsarlos demasiado rápido
@@ -298,6 +348,70 @@ class GameActivity : AppCompatActivity() {
         db.close()
     }
 
+    fun createNotificationChannel(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Notificaciones"
+            val descriptionText = "Tiempo de ejecución"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("CHANNEL_ID", name, importance).apply {
+                description = descriptionText
+            }
+            // Registra el canal con el sistema
+            val notificationManager: NotificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun checkCalendarPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(android.Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(android.Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(android.Manifest.permission.READ_CALENDAR, android.Manifest.permission.WRITE_CALENDAR),
+                    MainActivity.PERMISSION_REQUEST_CODE
+                )
+            } else {
+                storeVictoryInCalendar(score)
+            }
+        } else {
+            storeVictoryInCalendar(score)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == MainActivity.PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                storeVictoryInCalendar(score) // Permiso concedido, proceder con la operación
+            } else {
+                Log.e("MainActivity", "Permission Denied") // Permiso negado, manejar la situación
+            }
+        }
+    }
+
+    private fun storeVictoryInCalendar(score: Int) {
+        contentResolver = getContentResolver()
+        val values = ContentValues()
+
+        val startTime = System.currentTimeMillis()
+        val endTime = startTime + (60 * 1000) // Se usa 1 minuto para la duración
+
+        values.put(CalendarContract.Events.CALENDAR_ID, 1) // ID del calendario
+        values.put(CalendarContract.Events.DTSTART, startTime)
+        values.put(CalendarContract.Events.DTEND, endTime) // Se utiliza endTime para DTEND
+        values.put(CalendarContract.Events.TITLE, "Victoria en PlayDevs Get Success!!")
+        values.put(CalendarContract.Events.DESCRIPTION, "Puntuación Obtenida: $score")
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().id)
+
+        // Insertar el evento en el calendario
+        val uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
+
+        if (uri != null) {
+            Log.d("Calendar", "Evento añadido con URI: ${uri.toString()}")
+        } else {
+            Log.e("Calendar", "Error al añadir evento")
+        }
+    }
+
     private fun openFinalScreenActivity() {
         insertScoreInBD(score)
         databaseHandler.checkGameHistory()
@@ -306,6 +420,8 @@ class GameActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+
+
 }
 
 //función para cambiar a la siguiente activity(pantalla puntuación)
