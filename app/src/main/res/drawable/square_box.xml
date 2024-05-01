@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFFFFF"/> <!-- Color de fondo blanco -->
+    <stroke android:width="3dp" android:color="#FFA500"/> <!-- Borde naranja de 4dp -->
+    <corners android:radius="0dp"/> <!-- Esquinas cuadradas -->
+    <size
+        android:width="80dp"
+        android:height="80dp" />
+
+</shape>

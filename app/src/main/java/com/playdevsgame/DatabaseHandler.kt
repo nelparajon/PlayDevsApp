@@ -1,9 +1,9 @@
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.database.Cursor
 import android.util.Log
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -22,9 +22,10 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
 
     //con este método, cada vez que se inicia la aplicación se crearán las tablas de la BD si no existen.
     override fun onCreate(db: SQLiteDatabase?) {
-        //utilizamos ? en el contexto de kotlin para indicarle que acceda al método execSQL() si no es nulo.
+        //utilizamos  en el contexto de kotlin para indicarle que acceda al método execSQL() si no es nulo.
 
-        db?.execSQL("CREATE TABLE IF NOT EXISTS game_history(id_history INTEGER PRIMARY KEY AUTOINCREMENT, player_name TEXT NOT NULL, score INTEGER NOT NULL)")
+        db?.execSQL("CREATE TABLE IF NOT EXISTS game_history(id_history INTEGER PRIMARY KEY AUTOINCREMENT, player_name TEXT NOT NULL, score INTEGER NOT NULL,latitude REAL NOT NULL,\n" +
+                "                longitude REAL NOT NULL)")
         Log.d("DatabaseHelper", "Tabla creada")
         // Verificar la creación de la tabla
         /*if (tableExists("game_history", db)) {
@@ -53,6 +54,7 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
 
             Log.d("DatabaseHelper", "Registro insertado en la base de datos. ID: $insertedRowId, Nombre: $playerName, Puntuación: $score")
         }.subscribeOn(Schedulers.io())
+
 
 
     }
@@ -176,21 +178,37 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
     @SuppressLint("Range")
     fun checkGameHistory() {
         val db = readableDatabase
-        val cursor: Cursor? = db.rawQuery("SELECT * FROM game_history", null)
-        cursor?.use { cursor ->
+        db.rawQuery("SELECT * FROM game_history", null).use { cursor ->
             if (cursor.moveToFirst()) {
                 do {
-                    val id = cursor.getInt(cursor.getColumnIndex("id_history"))
-                    val playerName = cursor.getString(cursor.getColumnIndex("player_name"))
-                    val score = cursor.getInt(cursor.getColumnIndex("score"))
-                    Log.d("DatabaseHandler", "ID: $id, Player Name: $playerName, Score: $score")
+                    val idIndex = cursor.getColumnIndex("id_history")
+                    val playerNameIndex = cursor.getColumnIndex("player_name")
+                    val scoreIndex = cursor.getColumnIndex("score")
+                    if (idIndex != -1 && playerNameIndex != -1 && scoreIndex != -1) {
+                        val id = cursor.getInt(idIndex)
+                        val playerName = cursor.getString(playerNameIndex)
+                        val score = cursor.getInt(scoreIndex)
+                        Log.d("DatabaseHandler", "ID: $id, Player Name: $playerName, Score: $score")
+                    }
                 } while (cursor.moveToNext())
             } else {
                 Log.d("DatabaseHandler", "No hay registros en la tabla game_history")
             }
         }
-        cursor?.close()
         db.close()
     }
+
+    fun insertLocation(latitude: Double, longitude: Double): Completable {
+        return Completable.fromAction {
+            val db = writableDatabase
+            val contentValues = ContentValues().apply {
+                put("latitude", latitude)
+                put("longitude", longitude)
+            }
+            db.insert("game_history", null, contentValues)
+            db.close()
+        }.subscribeOn(Schedulers.io())
+    }
+
 
 }

@@ -50,4 +50,5 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-extensions:2.2.0")
     implementation ("androidx.lifecycle:lifecycle-common-java8:2.2.0")
     implementation ("androidx.lifecycle:lifecycle-service:2.2.0")
+    implementation ("com.google.android.gms:play-services-location:20.0.0")
 }
