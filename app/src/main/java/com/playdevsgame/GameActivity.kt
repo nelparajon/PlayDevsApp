@@ -321,5 +321,3 @@ class GameActivity : AppCompatActivity() {
 //startActivity(intent)
 //finish()
 //Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT)
-
-

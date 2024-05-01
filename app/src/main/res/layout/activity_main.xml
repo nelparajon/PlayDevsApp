@@ -54,7 +54,7 @@
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:onClick="onSettingsClick"
-        android:text="SETTINGS"
+        android:text="@string/settingsButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"

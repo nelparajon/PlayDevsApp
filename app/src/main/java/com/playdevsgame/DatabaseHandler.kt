@@ -1,3 +1,4 @@
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -172,6 +173,7 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     //Select * FROM la tabla del historial
+    @SuppressLint("Range")
     fun checkGameHistory() {
         val db = readableDatabase
         val cursor: Cursor? = db.rawQuery("SELECT * FROM game_history", null)

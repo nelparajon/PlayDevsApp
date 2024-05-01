@@ -1,20 +1,21 @@
 package com.playdevsgame
 
+import DatabaseHandler
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import android.app.AlertDialog
-import androidx.core.text.HtmlCompat
-import DatabaseHandler
 import android.content.Intent
 import android.util.Log
 import android.widget.CheckBox
 import android.widget.ImageButton
+import androidx.core.text.HtmlCompat
 import com.google.android.material.appbar.MaterialToolbar
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
+
+
+
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -81,11 +82,6 @@ class SettingsActivity : AppCompatActivity() {
             showInstructionsDialog()
         }
 
-        val buttonShowHistory = findViewById<Button>(R.id.historyButton)
-        buttonShowHistory.setOnClickListener {
-            getHistoryList()
-        }
-
         backButton.setOnClickListener {
             onBackPressed()
         }
@@ -101,50 +97,30 @@ class SettingsActivity : AppCompatActivity() {
         stopService(intent)
     }
 
-    private fun showHistoryDialog(history: String) {
-        val alertDialogBuilder = AlertDialog.Builder(this)
-        alertDialogBuilder.setTitle("Historial de Partidas")
-        alertDialogBuilder.setMessage(history)
-        alertDialogBuilder.setPositiveButton("Aceptar") { dialog, _ ->
-            dialog.dismiss()
-        }
-
-        val alertDialog = alertDialogBuilder.create()
-        alertDialog.show()
-    }
-
-    private fun getHistoryList() {
-        val db = DatabaseHandler(this)
-        db.getAllScoreData()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ scores ->
-                // Aquí recibimos la lista de partidas y la mostramos en el cuadro de diálogo
-                val historyList = StringBuilder()
-                for ((playerName, score) in scores) {
-                    historyList.append("Jugador: $playerName, Puntuación: $score\n")
-                }
-                showHistoryDialog(historyList.toString())
-            }, { error ->
-                // Manejar el error si ocurre
-                Log.e("SettingsActivity", "Error al obtener datos de la base de datos: ${error.message}")
-            })
-    }
-
+    /*private fun showHistoryDialog(history: String) {*/
     private fun showInstructionsDialog() {
-        val instructions = "<font color='#000000'><big>1. El jugador cuenta con 10 tiradas de dados para conseguir obtener la puntuación más alta posible.</big></font><br/>" +
-                "<font color='#000000'><big>2. Se empieza el juego con 0 puntos y en cada tirada se debe adivinar si el resultado de los dados será par o impar.</big></font><br/>" +
-                "<font color='#000000'><big>3. Si se acierta el resultado, se otorgan 10 puntos. Fallar no conlleva pérdida de puntos.</big></font>"
-
+        val instructions = getString(R.string.instructions)
         val alertDialogBuilder = AlertDialog.Builder(this)
-        alertDialogBuilder.setTitle(HtmlCompat.fromHtml("<big>Instrucciones del Juego</big>", HtmlCompat.FROM_HTML_MODE_LEGACY))
-        alertDialogBuilder.setMessage(HtmlCompat.fromHtml(instructions, HtmlCompat.FROM_HTML_MODE_LEGACY))
-        alertDialogBuilder.setPositiveButton("Aceptar") { dialog, _ ->
+        val title = getString(R.string.dialog_title_instructions)
+        val acceptText = getString(R.string.dialog_button_accept)
+
+        alertDialogBuilder.setTitle(
+            HtmlCompat.fromHtml(
+                "<big>$title</big>",
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
+        )
+        alertDialogBuilder.setMessage(
+            HtmlCompat.fromHtml(
+                instructions,
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
+        )
+        alertDialogBuilder.setPositiveButton(acceptText) { dialog, _ ->
             dialog.dismiss()
         }
 
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
-
 }
