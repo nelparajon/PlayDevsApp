@@ -27,6 +27,7 @@ class AudioPlaybackService : LifecycleService() {
     private var audioFilePath: String = ""
 
     private val lifecycleObserver = object : DefaultLifecycleObserver {
+        @RequiresApi(Build.VERSION_CODES.O)
         override fun onStart(owner: LifecycleOwner) {
             // Ensure mediaPlayer is initialized and ready before attempting to play
             if (::mediaPlayer.isInitialized && !mediaPlayer.isPlaying && audioManager.requestAudioFocus(focusRequest) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
