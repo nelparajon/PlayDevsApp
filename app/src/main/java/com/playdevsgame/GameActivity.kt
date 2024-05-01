@@ -61,6 +61,21 @@ class GameActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        /*val helpButton: ImageButton = findViewById(R.id.helpButton)
+        helpButton.setOnClickListener {
+            val intent = Intent(this, HelpActivity::class.java)
+            startActivity(intent)
+        }*/
+
+        val helpButton: ImageButton = findViewById(R.id.helpButton)
+        helpButton.setOnClickListener {
+            val helpBottomSheet = HelpBottomSheetFragment.newInstance()
+            helpBottomSheet.show(supportFragmentManager, helpBottomSheet.tag)
+        }
+
+
+
+
         initializateViews()
 
         databaseHandler = DatabaseHandler(this) // Inicializar la instancia de DatabaseHandler

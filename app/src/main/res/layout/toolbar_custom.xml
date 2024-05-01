@@ -17,12 +17,21 @@
         android:background="?attr/selectableItemBackground"
         android:contentDescription="@string/home" />
 
- <ImageButton
+    <ImageButton
         android:id="@+id/settingsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/baseline_settings_24"
         android:background="?attr/selectableItemBackground"
         android:contentDescription="@string/settings" />
+
+    <ImageButton
+        android:id="@+id/helpButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_help_24"
+        android:background="?attr/selectableItemBackground"
+        android:contentDescription="@string/help" />
+
 
 </com.google.android.material.appbar.MaterialToolbar>
