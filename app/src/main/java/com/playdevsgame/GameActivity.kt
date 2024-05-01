@@ -5,17 +5,14 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.ContentResolver
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.icu.util.TimeZone
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.provider.CalendarContract
 import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -24,6 +21,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import com.google.android.material.appbar.MaterialToolbar
 
 
@@ -47,7 +45,10 @@ class GameActivity : AppCompatActivity() {
     private lateinit var databaseHandler: DatabaseHandler
     private var initTime: Long = 0
     private var endTime: Long = 0
-    private var isRunning: Boolean = false;
+    private val NOTIFICATION_ID = 1
+    private val CHANNEL_ID = "my_channel_id" // Necesario para versiones de Android Oreo y posteriores
+    private val REQUEST_LOCATION_PERMISSION = 123 // Código de solicitud de permisos personalizado
+
     private lateinit var contentResolver: ContentResolver
 
     companion object {
@@ -58,6 +59,7 @@ class GameActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+
 
         val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -74,7 +76,10 @@ class GameActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
         initializateViews()
+        //createChannelNotification()
+        //createNotification()
 
         databaseHandler = DatabaseHandler(this) // Inicializar la instancia de DatabaseHandler
         databaseHandler.writableDatabase
@@ -94,10 +99,10 @@ class GameActivity : AppCompatActivity() {
                 clickCount++
 
 
-                if (clickCount == 10){
-                    checkCalendarPermission()
 
-                }
+                val duration =  elapsedTime(clickCount)
+                val context: Context = this
+
                 updateRollsRemaining(totalRolls, clickCount, viewRollsText)
 
                 //bucle que pasa a la siguiente activity(pantalla puntuación) cuando se acabe el contador de clics
@@ -105,6 +110,16 @@ class GameActivity : AppCompatActivity() {
                     openScoreActivity(updateScore)
                     finish()
                 }*/
+
+            }
+
+            if (clickCount == 10) {
+
+                Log.d("NOTIFICACION", "Mostrando notificación de victoria")
+
+
+                val (minutes, seconds) = elapsedTime(clickCount)
+                sendNotification(minutes, seconds)
 
             }
         }
@@ -116,10 +131,8 @@ class GameActivity : AppCompatActivity() {
                 onClicImparBtn()
 
                 clickCount++
-                if (clickCount == 10){
-                    checkCalendarPermission()
 
-                }
+
                 updateRollsRemaining(totalRolls, clickCount, viewRollsText)
 
 
@@ -129,6 +142,13 @@ class GameActivity : AppCompatActivity() {
                     openScoreActivity(updateScore)
                 }*/
 
+            }
+
+            if (clickCount == 10) {
+                Log.d("NOTIFICACION", "Mostrando notificación de victoria")
+
+                val (minutes, seconds) = elapsedTime(clickCount)
+                sendNotification(minutes, seconds)
             }
 
             //elapsedTime(clickCount)
@@ -185,23 +205,26 @@ class GameActivity : AppCompatActivity() {
 
     }
 
-    private fun elapsedTime(clickCount: Int): Long {
+    private fun elapsedTime(clickCount: Int): Pair<Long, Long> {
         return when (clickCount) {
             1 -> {
                 initTime = System.currentTimeMillis()
-                0 // No se devuelve ninguna diferencia porque solo se ha establecido initTime
+                Pair(0, 0) // No se devuelve ninguna diferencia porque solo se ha establecido initTime
             }
             10 -> {
-                endTime = System.currentTimeMillis()
+                val endTime = System.currentTimeMillis()
                 if (endTime > initTime) {
-                    endTime - initTime
+                    val elapsedTimeSeconds = (endTime - initTime) / 1000
+                    val minutes = elapsedTimeSeconds / 60
+                    val seconds = elapsedTimeSeconds % 60
+                    Pair(minutes, seconds)
                 } else {
-                    0 // Devuelve 0 si endTime es menor que initTime
+                    Pair(0, 0) // Devuelve 0 si endTime es menor que initTime
                 }
             }
             else -> {
                 // Si clickCount no es 1 ni 10, devuelve 0
-                0
+                Pair(0, 0)
             }
         }
     }
@@ -347,70 +370,74 @@ class GameActivity : AppCompatActivity() {
         }
         db.close()
     }
+    private fun sendNotification(minutes: Long, seconds: Long) {
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Notificaciones"
-            val descriptionText = "Tiempo de ejecución"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("CHANNEL_ID", name, importance).apply {
-                description = descriptionText
-            }
-            // Registra el canal con el sistema
-            val notificationManager: NotificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val channel = NotificationChannel(
+                "default",
+                "Channel name",
+                NotificationManager.IMPORTANCE_LOW
+            )
+            channel.description = "Channel description"
             notificationManager.createNotificationChannel(channel)
         }
-    }
 
-    private fun checkCalendarPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(android.Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(android.Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(android.Manifest.permission.READ_CALENDAR, android.Manifest.permission.WRITE_CALENDAR),
-                    MainActivity.PERMISSION_REQUEST_CODE
-                )
-            } else {
-                storeVictoryInCalendar(score)
-            }
-        } else {
-            storeVictoryInCalendar(score)
+        val intent = Intent(applicationContext, NotificationActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            action = "ACTION_NOTIFICATION_CLICK"
+            putExtra("RESOLUTION_TIME", minutes to seconds) // Envía los minutos y segundos como un par
         }
+        val pendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val mBuilder = NotificationCompat.Builder(applicationContext, "default")
+            .setSmallIcon(R.drawable.play_devs_logo_proto)
+            .setContentTitle("VICTORIA!")
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setContentText("Tiempo: ${formatTime(minutes, seconds)}") // Formatea los minutos y segundos
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+
+        val mNotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        mNotificationManager.notify(0, mBuilder.build())
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == MainActivity.PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                storeVictoryInCalendar(score) // Permiso concedido, proceder con la operación
-            } else {
-                Log.e("MainActivity", "Permission Denied") // Permiso negado, manejar la situación
-            }
-        }
+    private fun formatTime(minutes: Long, seconds: Long): String {
+        return String.format("%02d:%02d", minutes, seconds)
     }
 
-    private fun storeVictoryInCalendar(score: Int) {
-        contentResolver = getContentResolver()
-        val values = ContentValues()
-
-        val startTime = System.currentTimeMillis()
-        val endTime = startTime + (60 * 1000) // Se usa 1 minuto para la duración
-
-        values.put(CalendarContract.Events.CALENDAR_ID, 1) // ID del calendario
-        values.put(CalendarContract.Events.DTSTART, startTime)
-        values.put(CalendarContract.Events.DTEND, endTime) // Se utiliza endTime para DTEND
-        values.put(CalendarContract.Events.TITLE, "Victoria en PlayDevs Get Success!!")
-        values.put(CalendarContract.Events.DESCRIPTION, "Puntuación Obtenida: $score")
-        values.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().id)
-
-        // Insertar el evento en el calendario
-        val uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, values)
-
-        if (uri != null) {
-            Log.d("Calendar", "Evento añadido con URI: ${uri.toString()}")
-        } else {
-            Log.e("Calendar", "Error al añadir evento")
-        }
+/*private fun createChannelNotification(){
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        // Create the NotificationChannel.
+        val name = "Notificación Victoria"
+        val descriptionText = "Notifica de una victoria al usuario"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val mChannel = NotificationChannel(CHANNEL_ID, name, importance).apply { description = descriptionText }
+        mChannel.description = descriptionText
+        // Register the channel with the system. You can't change the importance
+        // or other notification behaviors after this.
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(mChannel)
     }
+}*/
+
+    /*private fun createNotification(){
+        val context: Context = this
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.play_devs_logo_proto)
+            .setContentTitle("VICTORIA!")
+            .setContentText("Tiempo de ejecución: ")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .build()
+    }*/
 
     private fun openFinalScreenActivity() {
         insertScoreInBD(score)

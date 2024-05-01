@@ -12,5 +12,5 @@
         android:layout_height="wrap_content"
         android:textSize="24sp"
         android:fontFamily="@font/madimi_one_regular"
-        android:text="Tiempo: --:--:--" />
+         />
 </LinearLayout>
