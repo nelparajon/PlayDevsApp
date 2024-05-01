@@ -2,52 +2,33 @@ package com.playdevsgame
 
 import DatabaseHandler
 import android.annotation.SuppressLint
+import android.content.ContentResolver
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.appbar.MaterialToolbar
 import io.reactivex.rxjava3.schedulers.Schedulers
-
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class FinalScreenActivity : AppCompatActivity() {
 
-    private lateinit var databaseHandler: DatabaseHandler // Agregar una instancia de DatabaseHandler
+    private lateinit var databaseHandler: DatabaseHandler
+    private lateinit var contentResolver: ContentResolver
 
-    @SuppressLint("StringFormatInvalid", "CheckResult")
+    @SuppressLint("StringFormatInvalid")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_final_screen)
 
-        /*    val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
-            setSupportActionBar(toolbar)
-
-            val homeButton: ImageButton = findViewById(R.id.homeButton)
-            homeButton.setOnClickListener {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-            }*/
+        databaseHandler = DatabaseHandler(this) // Inicializar databaseHandler aquí
 
         val settingsButton: ImageView = findViewById(R.id.botonSettings)
         settingsButton.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-        }
-
-        databaseHandler = DatabaseHandler(this) // Inicializar la instancia de DatabaseHandler
-        databaseHandler.checkGameHistory()
-        //borrar tabla
-        databaseHandler.clearTable()
-        databaseHandler.checkGameHistory()
-        // Configura el botón de Nueva Partida
-        val newGameButton: Button = findViewById(R.id.NewGameButton)
-        newGameButton.setOnClickListener {
-            // Crear un Intent para iniciar GameActivity
-            val intent = Intent(this@FinalScreenActivity, GameActivity::class.java)
             startActivity(intent)
         }
 
@@ -61,6 +42,10 @@ class FinalScreenActivity : AppCompatActivity() {
 
         // Verificar si la puntuación supera al récord actual
         val highScoreTextView: TextView = findViewById(R.id.HighScoreTextView)
+        // Inicializar contentResolver
+        contentResolver = getContentResolver()
+
+        databaseHandler = DatabaseHandler(this)
         databaseHandler.getRecordScoreData()
             .subscribeOn(Schedulers.io())
             .subscribe({ highScore ->
@@ -74,7 +59,32 @@ class FinalScreenActivity : AppCompatActivity() {
             }, { error ->
                 Log.e("FinalScreenActivity", "Error al obtener el récord: $error")
             })
-        databaseHandler.checkGameHistory()
+        //databaseHandler.checkGameHistory()
+
+        //val score = intent.getIntExtra("EXTRA_SCORE", 0)
+
+        // Llama a la función para agregar la victoria al calendario directamente
+        storeVictoryInCalendar(score)
+
     }
 
+    private fun storeVictoryInCalendar(score: Int) {
+        val calendarHelper = CalendarHelper(contentResolver)
+
+        GlobalScope.launch(Dispatchers.Main) {
+            val calendarId = calendarHelper.getCalendarId()
+            if (calendarId != null) {
+                try {
+                    calendarHelper.insertGameResult(score.toString(), System.currentTimeMillis())
+                } catch (e: Exception) {
+                    Log.e(
+                        "FinalScreenActivity",
+                        "Error al agregar la victoria al calendario: ${e.message}"
+                    )
+                }
+            } else {
+                Log.e("FinalScreenActivity", "No se pudo obtener el ID del calendario")
+            }
+        }
+    }
 }
