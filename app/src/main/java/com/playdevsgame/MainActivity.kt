@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         private const val PERMISSIONS_REQUEST_ACCESS_BACKGROUND_LOCATION = 101
     }
 
+
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var databaseHandler: DatabaseHandler
     private val PERMISSIONS_REQUEST_CODE = 1001 // Código de solicitud de permisos
