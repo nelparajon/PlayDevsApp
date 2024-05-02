@@ -1,29 +1,22 @@
 package com.playdevsgame
 
 import DatabaseHandler
-import android.annotation.SuppressLint
+import android.Manifest
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-import android.media.MediaPlayer
-import android.media.AudioManager
-import androidx.appcompat.app.AppCompatActivity
-import android.Manifest
 import android.content.pm.PackageManager
-import android.location.Location
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.database.Cursor
+import android.location.Location
+import android.os.Bundle
 import android.provider.CalendarContract
 import android.util.Log
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -40,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         // Start the audio service if it's not already running
         startAudioServiceIfNeeded()
@@ -48,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         if (!checkPermissions()) {
             requestPermissions()
         } else {
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
             // Los permisos ya están concedidos, puedes realizar la lógica adicional aquí
             setupDatabase()
             setupUI()
@@ -101,39 +96,34 @@ class MainActivity : AppCompatActivity() {
         // Configurar botones
         setupButtons()
     }
+
     private fun requestLocationPermissions() {
-        val hasFineLocationPermission = ContextCompat.checkSelfPermission(
-            this, Manifest.permission.ACCESS_FINE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED
+        // Verifica si los permisos de ubicación ya están concedidos
+        val hasFineLocationPermission = ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        val hasCoarseLocationPermission = ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
 
-        val hasCoarseLocationPermission = ContextCompat.checkSelfPermission(
-            this, Manifest.permission.ACCESS_COARSE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED
-
-        val shouldRequestBackgroundPermission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
-                ContextCompat.checkSelfPermission(
-                    this, Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-
-        val permissionsToRequest = mutableListOf<String>()
-        if (!hasFineLocationPermission) {
-            permissionsToRequest.add(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
-        if (!hasCoarseLocationPermission) {
-            permissionsToRequest.add(Manifest.permission.ACCESS_COARSE_LOCATION)
-        }
-        if (shouldRequestBackgroundPermission) {
-            permissionsToRequest.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-        }
-
-        if (permissionsToRequest.isNotEmpty()) {
+        if (!hasFineLocationPermission || !hasCoarseLocationPermission) {
+            // Si no, solicita los permisos
             ActivityCompat.requestPermissions(
-                this, permissionsToRequest.toTypedArray(), PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
+                this,
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
             )
         } else {
-            Log.d("MainActivity", "All necessary permissions are already granted.")
+            // Permiso ya concedido, puedes proceder con la funcionalidad que requiere ubicación
+            getLastLocationAndSave()
         }
     }
+
     private fun setupPlayerName() {
         val playerName = PreferenceManager.getPlayerName(this)
         if (playerName.isNullOrEmpty()) {
@@ -167,8 +157,9 @@ class MainActivity : AppCompatActivity() {
             PreferenceManager.savePlayerName(this, "player")
         }
     }
+
     private fun Context.isMyServiceRunning(serviceClass: Class<*>): Boolean {
-        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val manager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
         for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.name == service.service.className) {
                 return true
@@ -176,12 +167,14 @@ class MainActivity : AppCompatActivity() {
         }
         return false
     }
+
     override fun onDestroy() {
         super.onDestroy()
 
         // Detener el servicio de reproducción de audio
         stopService(Intent(this, AudioPlaybackService::class.java))
     }
+
     private fun checkPermissions(): Boolean {
         // Verificar si los permisos están concedidos
         return ContextCompat.checkSelfPermission(
@@ -233,7 +226,10 @@ class MainActivity : AppCompatActivity() {
                 val ownerName = cursor.getString(3)
 
                 // Registra los detalles de cada calendario obtenido
-                Log.d("Calendar", "ID: $calID Account: $accountName Display Name: $displayName Owner: $ownerName")
+                Log.d(
+                    "Calendar",
+                    "ID: $calID Account: $accountName Display Name: $displayName Owner: $ownerName"
+                )
 
                 // Verifica si el nombre del calendario coincide con el calendario de registro de partidas
                 if (displayName == "Resultado de partida") {
@@ -244,7 +240,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
@@ -266,6 +266,7 @@ class MainActivity : AppCompatActivity() {
                     Log.e("MainActivity", "Foreground location permission denied")
                 }
             }
+
             PERMISSIONS_REQUEST_ACCESS_BACKGROUND_LOCATION -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.d("MainActivity", "Background location permission granted")
@@ -330,16 +331,18 @@ class MainActivity : AppCompatActivity() {
         ) {
             return
         }
+
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             if (location != null) {
-                databaseHandler.insertLocation(location.latitude, location.longitude).subscribe({
-                    Log.d(
-                        "MainActivity",
-                        "Ubicación guardada correctamente: Lat ${location.latitude}, Lon ${location.longitude}"
-                    )
-                }, { error ->
-                    Log.e("MainActivity", "Error al guardar la ubicación", error)
-                })
+                databaseHandler.insertLocationData(location.latitude, location.longitude)
+                    .subscribe({
+                        Log.d(
+                            "MainActivity",
+                            "Ubicación guardada correctamente: Lat ${location.latitude}, Lon ${location.longitude}"
+                        )
+                    }, { error ->
+                        Log.e("MainActivity", "Error al guardar la ubicación", error)
+                    })
             } else {
                 Log.e("MainActivity", "Error: La ubicación recibida es nula")
             }

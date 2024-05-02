@@ -40,7 +40,7 @@ class CalendarHelper(private val contentResolver: ContentResolver) {
         // Implementa la lógica para obtener el ID del calendario
         val projection = arrayOf(CalendarContract.Calendars._ID)
         val selection = "${CalendarContract.Calendars._ID} = ?"
-        val selectionArgs = arrayOf("1") // ID del calendario que deseas buscar
+        val selectionArgs = arrayOf("6") // ID del calendario que deseas buscar
 
         val cursor = contentResolver.query(
             CalendarContract.Calendars.CONTENT_URI,

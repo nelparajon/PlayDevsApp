@@ -1,7 +1,15 @@
 package com.playdevsgame
 
+import DatabaseHandler
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.ContentResolver
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,14 +17,11 @@ import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Button
-import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import android.content.Intent
-import DatabaseHandler
-import android.widget.ImageButton
+import androidx.core.app.NotificationCompat
 import com.google.android.material.appbar.MaterialToolbar
 
 
@@ -38,7 +43,16 @@ class GameActivity : AppCompatActivity() {
     private var score = 0
     private lateinit var playerTextView: TextView
     private lateinit var databaseHandler: DatabaseHandler // Agregar una instancia de DatabaseHandler
+    private var initTime: Long = 0
+    private var endTime: Long = 0
+    private val NOTIFICATION_ID = 1
+    private val CHANNEL_ID = "my_channel_id" // Necesario para versiones de Android Oreo y posteriores
+    private val REQUEST_LOCATION_PERMISSION = 123 // Código de solicitud de permisos personalizado
+    private lateinit var contentResolver: ContentResolver
 
+    companion object {
+        const val PERMISSION_REQUEST_CODE = 101 // Código para identificar la solicitud de permisos
+    }
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,6 +125,15 @@ class GameActivity : AppCompatActivity() {
                 }*/
 
             }
+            if (clickCount == 10) {
+
+                Log.d("NOTIFICACION", "Mostrando notificación de victoria")
+
+
+                val (minutes, seconds) = elapsedTime(clickCount)
+                sendNotification(minutes, seconds)
+
+            }
         }
 
         //boton impar con un listener donde se incluye como funciona el boton y que funciones desempeña
@@ -127,6 +150,16 @@ class GameActivity : AppCompatActivity() {
                 /* if(clickCount == 10){
                     openScoreActivity(updateScore)
                 }*/
+
+            }
+
+            if (clickCount == 10) {
+
+                Log.d("NOTIFICACION", "Mostrando notificación de victoria")
+
+
+                val (minutes, seconds) = elapsedTime(clickCount)
+                sendNotification(minutes, seconds)
 
             }
         }
@@ -196,6 +229,30 @@ class GameActivity : AppCompatActivity() {
             onRollBtnPar.isEnabled = true
             onRollBtnImpar.isEnabled = true
         }, ANIMATIONS_DURATION)
+    }
+
+    private fun elapsedTime(clickCount: Int): Pair<Long, Long> {
+        return when (clickCount) {
+            1 -> {
+                initTime = System.currentTimeMillis()
+                Pair(0, 0) // No se devuelve ninguna diferencia porque solo se ha establecido initTime
+            }
+            10 -> {
+                val endTime = System.currentTimeMillis()
+                if (endTime > initTime) {
+                    val elapsedTimeSeconds = (endTime - initTime) / 1000
+                    val minutes = elapsedTimeSeconds / 60
+                    val seconds = elapsedTimeSeconds % 60
+                    Pair(minutes, seconds)
+                } else {
+                    Pair(0, 0) // Devuelve 0 si endTime es menor que initTime
+                }
+            }
+            else -> {
+                // Si clickCount no es 1 ni 10, devuelve 0
+                Pair(0, 0)
+            }
+        }
     }
 
     //función donde inicializamos todas las vistas y sus valores iniciales(si existiesen)
@@ -319,6 +376,51 @@ class GameActivity : AppCompatActivity() {
         }
         db.close()
     }
+
+    private fun sendNotification(minutes: Long, seconds: Long) {
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "default",
+                "Channel name",
+                NotificationManager.IMPORTANCE_LOW
+            )
+            channel.description = "Channel description"
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val intent = Intent(applicationContext, NotificationActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            action = "ACTION_NOTIFICATION_CLICK"
+            putExtra("RESOLUTION_TIME", minutes to seconds) // Envía los minutos y segundos como un par
+        }
+        val pendingIntent = PendingIntent.getActivity(
+            applicationContext,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val mBuilder = NotificationCompat.Builder(applicationContext, "default")
+            .setSmallIcon(R.drawable.play_devs_logo_proto)
+            .setContentTitle("VICTORIA!")
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setContentText("Tiempo: ${formatTime(minutes, seconds)}") // Formatea los minutos y segundos
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+
+        val mNotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        mNotificationManager.notify(0, mBuilder.build())
+    }
+
+    private fun formatTime(minutes: Long, seconds: Long): String {
+        return String.format("%02d:%02d", minutes, seconds)
+    }
+
 
     private fun openFinalScreenActivity() {
         insertScoreInBD(score)
