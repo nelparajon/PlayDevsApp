@@ -59,6 +59,26 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+      /*  val helpButton: ImageButton = findViewById(R.id.helpButton)
+        helpButton.setOnClickListener {
+            val intent = Intent(this, HelpActivity::class.java)
+            startActivity(intent)
+        }*/
+
+       /* val helpButton: ImageButton = findViewById(R.id.helpButton)
+        helpButton.setOnClickListener {
+            val helpBottomSheet = HelpBottomSheetFragment.newInstance()
+            helpBottomSheet.show(supportFragmentManager, helpBottomSheet.tag)
+        }*/
+
+        val helpButton: ImageButton = findViewById(R.id.helpButton)
+        helpButton.setOnClickListener {
+            val helpBottomSheet = HelpBottomSheetFragment.newInstance() // Asegúrate de que el método newInstance() esté definido correctamente en tu fragmento.
+            helpBottomSheet.show(supportFragmentManager, helpBottomSheet.tag)
+        }
+
+
+
         val playerNameEditText: EditText = findViewById(R.id.playerNameEditText)
         val backButton: Button = findViewById(R.id.backButton)
 

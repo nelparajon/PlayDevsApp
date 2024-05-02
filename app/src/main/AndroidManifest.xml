@@ -15,6 +15,9 @@
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
+    <!-- Permisos necesarios para la aplicación -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -58,6 +61,11 @@
         <activity
             android:name=".FinalScreenActivity"
             android:exported="true" />
+
+        <activity
+            android:name=".HelpActivity"
+            android:exported="true"/> <!-- Asegúrate de que esta línea esté presente -->
+
 
     </application>
 

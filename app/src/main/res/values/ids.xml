@@ -11,4 +11,5 @@
     <item name="imparText" type="id" />
     <item name="playerText" type="id" />
     <item name="captureButton" type="id" />
+    <item name="helpButton" type="id" />
 </resources>

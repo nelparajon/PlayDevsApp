@@ -13,3 +13,9 @@
 .externalNativeBuild
 .cxx
 local.properties
+# Ignorar archivos de configuración específicos del IDE y del entorno
+.idea/
+daemon/
+jdks/
+native/
+wrapper/

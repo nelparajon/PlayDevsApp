@@ -26,7 +26,6 @@
 <!-- FinalScreen Activity -->
 <string name="puntuacion_actual">Current Score:: %1$d</string>
 <string name="record">Record: %1$d</string>
-    <string name="botonSettings">New Game</string>
 
 <!-- Messages Preferences -->
 <string name="signature_title">Your signature</string>
@@ -41,7 +40,7 @@
     <string name="logo_description" />
     <string name="settings" />
     <string name="home" />
-
+    <string name="help" />
     <!-- Settings -->
 
     <string name="instrucciones_del_juego">Game instructions</string>
@@ -63,5 +62,7 @@
         <font color=\'#000000\'><big>3. If the guess is correct, 10 points are awarded. Failing does not result in point loss.</big></font>
     ]]>
 </string>
+    <string name="nueva_partida">New Game</string>
+    <string name="guardar_captura">Save Screen</string>
 
- </resources>
+</resources>

@@ -26,7 +26,6 @@
     <!-- FinalScreen Activity -->
     <string name="puntuacion_actual">Puntuación Actual: %1$d</string>
     <string name="record">Récord: %1$d</string>
-    <string name="botonSettings">Nueva partida</string>
 
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
@@ -41,6 +40,7 @@
     <string name="logo_description" />
     <string name="settings" />
     <string name="home" />
+    <string name="help" />
 
     <!-- Settings -->
     <string name="instrucciones_del_juego">Instrucciones del juego</string>
@@ -62,6 +62,6 @@
         <font color=\'#000000\'><big>3. Si la suposición es correcta, se otorgan 10 puntos. Fallar no resulta en pérdida de puntos.</big></font>
     ]]>
 </string>
-
-
+    <string name="nueva_partida">Nueva Partida</string>
+    <string name="guardar_captura">Guardar Captura</string>
 </resources>

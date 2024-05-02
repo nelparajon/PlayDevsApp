@@ -205,7 +205,7 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
                 put("latitude", latitude)
                 put("longitude", longitude)
             }
-            db.insert("game_history", null, contentValues)
+            db.insert("location_history", null, contentValues)
             db.close()
         }.subscribeOn(Schedulers.io())
     }
