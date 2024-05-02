@@ -27,12 +27,12 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
         db?.execSQL("CREATE TABLE IF NOT EXISTS game_history(id_history INTEGER PRIMARY KEY AUTOINCREMENT, player_name TEXT NOT NULL, score INTEGER NOT NULL,latitude REAL NOT NULL,\n" +
                 "                longitude REAL NOT NULL)")
         Log.d("DatabaseHelper", "Tabla creada")
-        // Verificar la creación de la tabla
-        /*if (tableExists("game_history", db)) {
-            Log.d("DatabaseHelper", "Base de datos creada")
-        } else {
-            Log.e("DatabaseHelper", "Error creating table 'game_history'")
-        }*/
+        // Utilizamos el operador de elvis (?.) para acceder al método execSQL() solo si db no es nulo.
+        db?.execSQL("CREATE TABLE IF NOT EXISTS localitation_player(" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "latitud REAL NOT NULL," +
+                "altitud REAL NOT NULL)")
+        Log.d("DatabaseHelper", "Tabla 'localitation_player' creada correctamente")
     }
 
     //este método se utiliza para actuazliar la BD cuando sea necesario.
@@ -58,6 +58,20 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
 
 
     }
+
+    fun insertLocationData(latitude: Double, altitude: Double): Completable {
+        return Completable.fromAction {
+            val db = writableDatabase
+            val contentValues = ContentValues()
+            contentValues.put("latitud", latitude)
+            contentValues.put("altitud", altitude)
+            val insertedRowId = db.insert("localitation_player", null, contentValues)
+            db.close()
+
+            Log.d("DatabaseHelper", "Registro insertado en la tabla 'localitation_player'. ID: $insertedRowId, Latitud: $latitude, Altitud: $altitude")
+        }.subscribeOn(Schedulers.io())
+    }
+
 
     //funcion que devuelve la puntuaciñon mas alta entre todos los registros de la tabla game_history
     // Single representa un observable que emite exactamente un elemento
