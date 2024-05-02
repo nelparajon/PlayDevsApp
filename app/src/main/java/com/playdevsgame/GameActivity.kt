@@ -67,12 +67,17 @@ class GameActivity : AppCompatActivity() {
             startActivity(intent)
         }*/
 
-        val helpButton: ImageButton = findViewById(R.id.helpButton)
+      /*  val helpButton: ImageButton = findViewById(R.id.helpButton)
         helpButton.setOnClickListener {
             val helpBottomSheet = HelpBottomSheetFragment.newInstance()
             helpBottomSheet.show(supportFragmentManager, helpBottomSheet.tag)
-        }
+        }*/
 
+        val helpButton: ImageButton = findViewById(R.id.helpButton)
+        helpButton.setOnClickListener {
+            val helpBottomSheet = HelpBottomSheetFragment.newInstance() // Asegúrate de que el método newInstance() esté definido correctamente en tu fragmento.
+            helpBottomSheet.show(supportFragmentManager, helpBottomSheet.tag)
+        }
 
 
 
