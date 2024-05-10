@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    // Add the Google services Gradle plugin
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -52,4 +54,9 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-service:2.2.0")
     implementation ("com.google.android.gms:play-services-location:20.0.0")
     implementation ("androidx.constraintlayout:constraintlayout:2.0.4")
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    // TODO: Add the dependencies for Firebase products you want to use
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation("com.google.firebase:firebase-analytics")
 }

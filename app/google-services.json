@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "651360814041",
+    "project_id": "playdevsgame",
+    "storage_bucket": "playdevsgame.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:651360814041:android:c685d5be432d48d8640fc8",
+        "android_client_info": {
+          "package_name": "com.playdevsgame"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcxfnbHr74NIYSvP4HdCSc7s4B5JfQIUY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
