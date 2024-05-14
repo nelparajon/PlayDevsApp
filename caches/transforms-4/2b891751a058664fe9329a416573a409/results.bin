@@ -1,0 +1,3 @@
+o/.gradle-instrumented.marker
+o/instrumented/android-gradle.jar
+o/original/android-gradle.jar

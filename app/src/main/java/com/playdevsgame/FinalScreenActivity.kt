@@ -137,4 +137,3 @@ class FinalScreenActivity : AppCompatActivity() {
     }
 }
 
-

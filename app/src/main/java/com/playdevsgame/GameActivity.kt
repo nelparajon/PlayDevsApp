@@ -42,24 +42,23 @@ class GameActivity : AppCompatActivity() {
     private lateinit var imparText: TextView
     private var score = 0
     private lateinit var playerTextView: TextView
-    private lateinit var databaseHandler: DatabaseHandler
+    private lateinit var databaseHandler: DatabaseHandler // Agregar una instancia de DatabaseHandler
     private var initTime: Long = 0
     private var endTime: Long = 0
     private val NOTIFICATION_ID = 1
     private val CHANNEL_ID = "my_channel_id" // Necesario para versiones de Android Oreo y posteriores
     private val REQUEST_LOCATION_PERMISSION = 123 // Código de solicitud de permisos personalizado
-
     private lateinit var contentResolver: ContentResolver
 
     companion object {
         const val PERMISSION_REQUEST_CODE = 101 // Código para identificar la solicitud de permisos
     }
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-
 
         val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -67,19 +66,38 @@ class GameActivity : AppCompatActivity() {
         val homeButton: ImageButton = findViewById(R.id.homeButton)
         homeButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             startActivity(intent)
         }
 
         val settingsButton: ImageButton = findViewById(R.id.settingsButton)
         settingsButton.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             startActivity(intent)
         }
 
+        /*val helpButton: ImageButton = findViewById(R.id.helpButton)
+        helpButton.setOnClickListener {
+            val intent = Intent(this, HelpActivity::class.java)
+            startActivity(intent)
+        }*/
+
+        /*  val helpButton: ImageButton = findViewById(R.id.helpButton)
+          helpButton.setOnClickListener {
+              val helpBottomSheet = HelpBottomSheetFragment.newInstance()
+              helpBottomSheet.show(supportFragmentManager, helpBottomSheet.tag)
+          }*/
+
+        val helpButton: ImageButton = findViewById(R.id.helpButton)
+        helpButton.setOnClickListener {
+            val helpBottomSheet = HelpBottomSheetFragment.newInstance() // Asegúrate de que el método newInstance() esté definido correctamente en tu fragmento.
+            helpBottomSheet.show(supportFragmentManager, helpBottomSheet.tag)
+        }
+
+
 
         initializateViews()
-        //createChannelNotification()
-        //createNotification()
 
         databaseHandler = DatabaseHandler(this) // Inicializar la instancia de DatabaseHandler
         databaseHandler.writableDatabase
@@ -98,11 +116,6 @@ class GameActivity : AppCompatActivity() {
 
                 clickCount++
 
-
-
-                val duration =  elapsedTime(clickCount)
-                val context: Context = this
-
                 updateRollsRemaining(totalRolls, clickCount, viewRollsText)
 
                 //bucle que pasa a la siguiente activity(pantalla puntuación) cuando se acabe el contador de clics
@@ -112,7 +125,6 @@ class GameActivity : AppCompatActivity() {
                 }*/
 
             }
-
             if (clickCount == 10) {
 
                 Log.d("NOTIFICACION", "Mostrando notificación de victoria")
@@ -132,10 +144,7 @@ class GameActivity : AppCompatActivity() {
 
                 clickCount++
 
-
                 updateRollsRemaining(totalRolls, clickCount, viewRollsText)
-
-
 
                 //bucle que pasa a la siguiente activity(pantalla puntuación) cuando se acabe el contador de clics
                 /* if(clickCount == 10){
@@ -145,13 +154,14 @@ class GameActivity : AppCompatActivity() {
             }
 
             if (clickCount == 10) {
+
                 Log.d("NOTIFICACION", "Mostrando notificación de victoria")
+
 
                 val (minutes, seconds) = elapsedTime(clickCount)
                 sendNotification(minutes, seconds)
-            }
 
-            //elapsedTime(clickCount)
+            }
         }
 
     }
@@ -205,6 +215,22 @@ class GameActivity : AppCompatActivity() {
 
     }
 
+    //función que se usará para desahabilitar los botones durante la animación
+    //evitando colapso al pulsarlos demasiado rápido
+    private fun disabledBtns() {
+        onRollBtnPar.isEnabled = false
+        onRollBtnImpar.isEnabled = false
+    }
+
+    //función que activa los botones de nuevo
+    //retrasamos la activación durante 0,9 segundos para que coincida con la animacion
+    private fun activateBtns() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            onRollBtnPar.isEnabled = true
+            onRollBtnImpar.isEnabled = true
+        }, ANIMATIONS_DURATION)
+    }
+
     private fun elapsedTime(clickCount: Int): Pair<Long, Long> {
         return when (clickCount) {
             1 -> {
@@ -227,26 +253,6 @@ class GameActivity : AppCompatActivity() {
                 Pair(0, 0)
             }
         }
-    }
-
-
-
-
-
-    //función que se usará para desahabilitar los botones durante la animación
-    //evitando colapso al pulsarlos demasiado rápido
-    private fun disabledBtns() {
-        onRollBtnPar.isEnabled = false
-        onRollBtnImpar.isEnabled = false
-    }
-
-    //función que activa los botones de nuevo
-    //retrasamos la activación durante 0,9 segundos para que coincida con la animacion
-    private fun activateBtns() {
-        Handler(Looper.getMainLooper()).postDelayed({
-            onRollBtnPar.isEnabled = true
-            onRollBtnImpar.isEnabled = true
-        }, ANIMATIONS_DURATION)
     }
 
     //función donde inicializamos todas las vistas y sus valores iniciales(si existiesen)
@@ -370,6 +376,7 @@ class GameActivity : AppCompatActivity() {
         }
         db.close()
     }
+
     private fun sendNotification(minutes: Long, seconds: Long) {
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -414,30 +421,6 @@ class GameActivity : AppCompatActivity() {
         return String.format("%02d:%02d", minutes, seconds)
     }
 
-/*private fun createChannelNotification(){
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        // Create the NotificationChannel.
-        val name = "Notificación Victoria"
-        val descriptionText = "Notifica de una victoria al usuario"
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val mChannel = NotificationChannel(CHANNEL_ID, name, importance).apply { description = descriptionText }
-        mChannel.description = descriptionText
-        // Register the channel with the system. You can't change the importance
-        // or other notification behaviors after this.
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(mChannel)
-    }
-}*/
-
-    /*private fun createNotification(){
-        val context: Context = this
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.play_devs_logo_proto)
-            .setContentTitle("VICTORIA!")
-            .setContentText("Tiempo de ejecución: ")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .build()
-    }*/
 
     private fun openFinalScreenActivity() {
         insertScoreInBD(score)
@@ -447,8 +430,6 @@ class GameActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-
-
 }
 
 //función para cambiar a la siguiente activity(pantalla puntuación)
@@ -462,5 +443,3 @@ class GameActivity : AppCompatActivity() {
 //startActivity(intent)
 //finish()
 //Toast.makeText(this, "Fin del juego", Toast.LENGTH_SHORT)
-
-

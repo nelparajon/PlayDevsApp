@@ -8,18 +8,17 @@
 
 <!--    toolbar-->
 
-<!--    <include
-        layout="@layout/toolbar_custom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />-->
-
+ <!-- <include
+      layout="@layout/toolbar_custom"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" />-->
 
     <ImageView
         android:id="@+id/botonSettings"
         android:layout_width="43dp"
         android:layout_height="44dp"
         android:elevation="50dp"
-        android:src="@drawable/ajustes_icon"
+        android:src="@drawable/baseline_settings_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -27,8 +26,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-
-    <!-- Botón Nueva Partida -->
+  <!-- Botón Nueva Partida -->
 
     <ImageView
         android:id="@+id/diceImageView"
@@ -53,7 +51,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Nueva Partida"
+        android:text="@string/nueva_partida"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,7 +64,7 @@
         android:id="@+id/captureButton"
         android:layout_width="213dp"
         android:layout_height="89dp"
-        android:text="Guardar Captura"
+        android:text="@string/guardar_captura"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
