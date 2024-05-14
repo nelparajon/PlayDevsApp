@@ -17,4 +17,6 @@ object PreferenceManager {
         val sharedPref = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         return sharedPref.getString(PREF_PLAYER_NAME, "player") ?: "player"
     }
+
+
 }

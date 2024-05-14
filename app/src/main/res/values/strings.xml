@@ -1,6 +1,9 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- ID cliente por defecto Google Firebase-->
+    <string name="default_web_client_id">651360814041-5l5ge8h5fv6u7q289riok8ept8po7p4c.apps.googleusercontent.com</string>
+
     <!-- Application name -->
 <string name="app_name">PlayDevsGame</string>
 
@@ -8,6 +11,8 @@
 <string name="btn_play">PLAY</string>
     <string name="settingsButton">SETTINGS</string>
 
+    <!-- Login Activity -->
+    <string name="btnAuthGoogle">Connect with Google</string>
 
 <!-- Game Activity -->
 <string name="btn_par">EVEN</string>

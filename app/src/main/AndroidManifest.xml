@@ -47,6 +47,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".LogInActivity"
+            android:exported="true">
+
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -63,9 +67,7 @@
             android:name=".FinalScreenActivity"
             android:exported="true" />
 
-        <activity
-            android:name=".HelpActivity"
-            android:exported="true"/> <!-- Asegúrate de que esta línea esté presente -->
+
 
 
     </application>

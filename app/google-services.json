@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "651360814041",
+    "firebase_url": "https://playdevsgame-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "playdevsgame",
     "storage_bucket": "playdevsgame.appspot.com"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.playdevsgame"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "651360814041-3741jeq5un5govvaguhpb0fr1h432sej.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.playdevsgame",
+            "certificate_hash": "0fea7b4f594d22d41a94bf5db8982e2adf952322"
+          }
+        },
+        {
+          "client_id": "651360814041-5l5ge8h5fv6u7q289riok8ept8po7p4c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDcxfnbHr74NIYSvP4HdCSc7s4B5JfQIUY"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "651360814041-5l5ge8h5fv6u7q289riok8ept8po7p4c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

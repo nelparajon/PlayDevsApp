@@ -22,7 +22,7 @@ class SplashScreenActivity : AppCompatActivity() {
         */
         Handler(Looper.getMainLooper()).postDelayed({
             // Creo un Intent para iniciar MainActivity
-            val intent = Intent(this@SplashScreenActivity, MainActivity::class.java)
+            val intent = Intent(this@SplashScreenActivity, LogInActivity::class.java)
             startActivity(intent)
 
             // Cerrar la activity splash después de iniciar MainActivity. Evitas el consumo de recursos

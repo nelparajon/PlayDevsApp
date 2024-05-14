@@ -9,6 +9,9 @@
     <string name="btn_play">JUGAR</string>
     <string name="settingsButton">AJUSTES</string>
 
+    <!-- Login Activity -->
+    <string name="btnAuthGoogle">Conectarse con google</string>
+
     <!-- Game Activity -->
     <string name="btn_par">PAR</string>
     <string name="btn_impar">IMPAR</string>
