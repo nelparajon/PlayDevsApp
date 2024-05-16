@@ -5,43 +5,43 @@
     <string name="default_web_client_id">651360814041-5l5ge8h5fv6u7q289riok8ept8po7p4c.apps.googleusercontent.com</string>
 
     <!-- Application name -->
-<string name="app_name">PlayDevsGame</string>
+    <string name="app_name">PlayDevsGame</string>
 
-<!-- Main Activity -->
-<string name="btn_play">PLAY</string>
+    <!-- Main Activity -->
+    <string name="btn_play">PLAY</string>
     <string name="settingsButton">SETTINGS</string>
 
     <!-- Login Activity -->
     <string name="btnAuthGoogle">Connect with Google</string>
 
-<!-- Game Activity -->
-<string name="btn_par">EVEN</string>
-<string name="btn_impar">ODD</string>
-<string name="score">SCORE</string>
-<string name="par">EVEN!</string>
-<string name="impar">ODD!</string>
-<string name="rolls_text">ROLLS</string>
-<string name="player_name">PLAYER</string>
+    <!-- Game Activity -->
+    <string name="btn_par">EVEN</string>
+    <string name="btn_impar">ODD</string>
+    <string name="score">SCORE</string>
+    <string name="par">EVEN!</string>
+    <string name="impar">ODD!</string>
+    <string name="rolls_text">ROLLS</string>
+    <string name="player_name">PLAYER</string>
 
-<!-- Preference Titles -->
-<string name="title_activity_settings">SettingsActivity</string>
-<string name="messages_header">Messages</string>
-<string name="sync_header">Sync</string>
+    <!-- Preference Titles -->
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
 
-<!-- FinalScreen Activity -->
-<string name="puntuacion_actual">Current Score:: %1$d</string>
-<string name="record">Record: %1$d</string>
+    <!-- FinalScreen Activity -->
+    <string name="puntuacion_actual">Current Score:: %1$d</string>
+    <string name="record">Record: %1$d</string>
 
-<!-- Messages Preferences -->
-<string name="signature_title">Your signature</string>
-<string name="reply_title">Default reply action</string>
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
 
-<!-- Sync Preferences -->
-<string name="sync_title">Sync email periodically</string>
-<string name="attachment_title">Download incoming attachments</string>
-<string name="attachment_summary_on">Automatically download attachments for incoming emails
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
-<string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="logo_description" />
     <string name="settings" />
     <string name="home" />

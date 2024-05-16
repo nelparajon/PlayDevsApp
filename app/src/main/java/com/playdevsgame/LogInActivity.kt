@@ -31,10 +31,11 @@ class LogInActivity : AppCompatActivity() {
     private lateinit var btnAuthGoogle: Button
     private lateinit var googleLogo: ImageView
     private lateinit var auth: FirebaseAuth
-    private val authListener: FirebaseAuth.AuthStateListener = TODO()
-    private var database: FirebaseDatabase
-    private var mGoogleSignInClient: GoogleSignInClient
+    private lateinit var authListener: FirebaseAuth.AuthStateListener
+    private lateinit var database: FirebaseDatabase
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
     private lateinit var firebaseManager: FirebaseManager
+
     companion object {
         private const val RC_SIGN_IN = 9001
     }
@@ -53,7 +54,7 @@ class LogInActivity : AppCompatActivity() {
         auth = Firebase.auth
 
         // Agregar un listener de estado de autenticación
-        val authListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
+        authListener = FirebaseAuth.AuthStateListener { firebaseAuth ->
             val user = firebaseAuth.currentUser
             if (user != null) {
                 // Usuario está autenticado
@@ -111,7 +112,7 @@ class LogInActivity : AppCompatActivity() {
                     // Inicio de sesión exitoso
                     val user = FirebaseAuth.getInstance().currentUser
                     // Verificar y agregar el usuario a la base de datos
-                   checkAndAddUserToDatabase(user, this)
+                    checkAndAddUserToDatabase(user, this)
 
                     val intent = Intent(this, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -123,6 +124,7 @@ class LogInActivity : AppCompatActivity() {
                 }
             }
     }
+
     private fun checkAndAddUserToDatabase(user: FirebaseUser?, context: Context) {
         val databaseReference = FirebaseDatabase.getInstance().getReference("users")
 
@@ -156,12 +158,8 @@ class LogInActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         auth.removeAuthStateListener(authListener)
     }
-
-
-
 }
