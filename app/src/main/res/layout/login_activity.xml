@@ -19,6 +19,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.581" />
 
+    <Button
+        android:id="@+id/btnAuthEmail"
+        android:layout_width="177dp"
+        android:layout_height="52dp"
+        android:background="@color/white"
+        android:backgroundTint="#D8D6D6"
+        android:text="@string/btnAuthEmail"
+        android:textColorLink="#03A9F4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.675" />
+
     <ImageView
         android:id="@+id/googleLogo"
         android:layout_width="66dp"

@@ -10,9 +10,12 @@
     <!-- Main Activity -->
     <string name="btn_play">PLAY</string>
     <string name="settingsButton">SETTINGS</string>
+    <string name="rankingButton">RANKING</string>
 
     <!-- Login Activity -->
     <string name="btnAuthGoogle">Connect with Google</string>
+    <string name="btnAuthEmail">Connect with Email</string>
+
 
     <!-- Game Activity -->
     <string name="btn_par">EVEN</string>

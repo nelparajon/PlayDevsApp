@@ -8,9 +8,11 @@
     <!-- Main Activity -->
     <string name="btn_play">JUGAR</string>
     <string name="settingsButton">AJUSTES</string>
+    <string name="rankingButton">RANKING</string>
 
     <!-- Login Activity -->
     <string name="btnAuthGoogle">Conectarse con google</string>
+    <string name="btnAuthEmail">Conectarse con el Email</string>
 
     <!-- Game Activity -->
     <string name="btn_par">PAR</string>

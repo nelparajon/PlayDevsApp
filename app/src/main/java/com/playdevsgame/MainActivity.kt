@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var databaseHandler: DatabaseHandler
     private val PERMISSIONS_REQUEST_CODE = 1001 // Código de solicitud de permisos
+    private lateinit var btnRanking : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -145,6 +146,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, SettingsActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             })
+        }
+
+        btnRanking = findViewById(R.id.rankingButton)
+        btnRanking.setOnClickListener {
+            val intent = Intent(this@MainActivity, RankingActivity::class.java)
+            startActivity(intent)
         }
     }
 
