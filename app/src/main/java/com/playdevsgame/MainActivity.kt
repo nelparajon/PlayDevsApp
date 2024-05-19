@@ -34,6 +34,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         // Start the audio service if it's not already running

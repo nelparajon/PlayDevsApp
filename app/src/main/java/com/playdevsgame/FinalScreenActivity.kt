@@ -15,6 +15,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 
@@ -22,6 +23,7 @@ class FinalScreenActivity : AppCompatActivity() {
 
     private lateinit var databaseHandler: DatabaseHandler
     private lateinit var currentBitmap: Bitmap
+    private lateinit var firebaseManager: FirebaseManager
 
     companion object {
         private const val REQUEST_CREATE_FILE = 1
@@ -41,8 +43,12 @@ class FinalScreenActivity : AppCompatActivity() {
         databaseHandler = DatabaseHandler(this) // Inicializar la instancia de DatabaseHandler
         databaseHandler.checkGameHistory()
         //borrar tabla
-        databaseHandler.clearTable()
+
         databaseHandler.checkGameHistory()
+
+        firebaseManager = FirebaseManager(this)
+
+        val user = FirebaseAuth.getInstance().currentUser
 
         val newGameButton: Button = findViewById(R.id.NewGameButton)
         newGameButton.setOnClickListener {
@@ -63,6 +69,13 @@ class FinalScreenActivity : AppCompatActivity() {
                 } else {
                     highScoreTextView.text = getString(R.string.record, highScore)
                 }
+
+                // Actualizar el high score en Firebase si el usuario está autenticado
+                if (user != null) {
+                    val highScoreValue = if (score > highScore) score else highScore
+                    firebaseManager.updateHighScoreInFirebase(user.uid, highScoreValue.toString())
+                }
+
             }, { error ->
                 Log.e("FinalScreenActivity", "Error al obtener el récord: $error")
             })

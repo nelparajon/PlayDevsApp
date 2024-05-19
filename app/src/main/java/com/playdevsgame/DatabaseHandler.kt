@@ -22,6 +22,9 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
 
     //con este método, cada vez que se inicia la aplicación se crearán las tablas de la BD si no existen.
     override fun onCreate(db: SQLiteDatabase?) {
+        // Llamar directamente a la lógica de clearTable()
+        db?.execSQL("DELETE FROM game_history")
+        Log.d("DatabaseHandler", "Contenido de la tabla 'game_history' borrado correctamente")
         //utilizamos  en el contexto de kotlin para indicarle que acceda al método execSQL() si no es nulo.
 
         db?.execSQL("CREATE TABLE IF NOT EXISTS game_history(id_history INTEGER PRIMARY KEY AUTOINCREMENT, player_name TEXT NOT NULL, score INTEGER NOT NULL,latitude REAL NOT NULL,\n" +
@@ -202,7 +205,7 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
                         val id = cursor.getInt(idIndex)
                         val playerName = cursor.getString(playerNameIndex)
                         val score = cursor.getInt(scoreIndex)
-                        Log.d("DatabaseHandler", "ID: $id, Player Name: $playerName, Score: $score")
+                        //Log.d("DatabaseHandler", "ID: $id, Player Name: $playerName, Score: $score")
                     }
                 } while (cursor.moveToNext())
             } else {
@@ -212,6 +215,15 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DATABASE_NAME
         db.close()
     }
 
+    fun clearAllTables(): Completable {
+        return Completable.fromAction {
+            val db = writableDatabase
+            db.delete("game_history", null, null)
+            db.delete("localitation_player", null, null)
+            db.close()
+            Log.d("DatabaseHandler", "Contenido de todas las tablas borrado correctamente")
+        }.subscribeOn(Schedulers.io())
+    }
     fun insertLocation(latitude: Double, longitude: Double): Completable {
         return Completable.fromAction {
             val db = writableDatabase
