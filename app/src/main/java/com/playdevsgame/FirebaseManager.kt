@@ -55,7 +55,7 @@ class FirebaseManager(private val context: Context) {
         auth.addAuthStateListener(authListener)
     }
 
-    //eliminamos el listener (se suele usar en OnDestroy)
+    //eliminamos el listener
     fun removeAuthStateListener() {
         auth.removeAuthStateListener(authListener)
     }
@@ -82,8 +82,8 @@ class FirebaseManager(private val context: Context) {
                         val userData = mapOf(
                             "name" to user.displayName,
                             "email" to user.email,
-                            "userID" to playerName,
-                            "score" to "0" // valor por defecto
+                            "userID" to playerName
+
                         )
                         databaseReference.child(user.uid).setValue(userData)
                             .addOnSuccessListener {
@@ -107,7 +107,7 @@ class FirebaseManager(private val context: Context) {
 
 
         // Crear la referencia a la ubicación del score en la base de datos
-        val databaseReference = database.getReference("users").child(userId).child("score")
+        val databaseReference = database.getReference("records").child(userId).child("record")
 
         // Actualizar el valor del score en la base de datos
         databaseReference.setValue(updateScore)
@@ -119,13 +119,13 @@ class FirebaseManager(private val context: Context) {
             }
     }
 
-    // Método para codificar el correo electrónico reemplazando los puntos con comas
+
 
 
 
     // Método para leer y actualizar el valor de score
-     /*fun updateScoreToString(userId: String) {
-        val databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId)
+     fun updateScoreToFirebase(userId: String) {
+        val databaseReference = FirebaseDatabase.getInstance().getReference("scores").child(userId)
 
         // Leer el valor actual de score
         databaseReference.child("score").addListenerForSingleValueEvent(object : ValueEventListener {
@@ -156,7 +156,7 @@ class FirebaseManager(private val context: Context) {
                 Log.d("Firebase", "Error al leer el score", databaseError.toException())
             }
         })
-    }*/
+    }
 
     //si fuese necesario usarlo.
     fun signOut(){
