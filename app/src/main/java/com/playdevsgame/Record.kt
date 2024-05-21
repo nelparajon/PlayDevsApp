@@ -1,7 +1,9 @@
 package com.playdevsgame
 
+
 data class Record(
-    var name: String? = "",
-    var premio: Int? = 0,
-    var record: String? = "0"
+
+    val name: String,
+    val premio: Int,
+    val record: String
 )
