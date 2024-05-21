@@ -16,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 
@@ -70,10 +71,12 @@ class FinalScreenActivity : AppCompatActivity() {
                     highScoreTextView.text = getString(R.string.record, highScore)
                 }
 
-                // Actualizar el high score en Firebase si el usuario está autenticado
+                // Actualizar el highscore y score en Firebase si el usuario está autenticado
                 if (user != null) {
+                    firebaseManager.addScoreToFirebase(user, score.toString())
                     val highScoreValue = if (score > highScore) score else highScore
-                    firebaseManager.updateHighScoreInFirebase(user.uid, highScoreValue.toString())
+                    firebaseManager.updateHighScoreInFirebase(user, highScoreValue.toString())
+                    addCoins(user, score.toString())
                 }
 
             }, { error ->
@@ -135,6 +138,15 @@ class FinalScreenActivity : AppCompatActivity() {
             } ?: Log.e("FinalScreenActivity", "No se pudo abrir el outputStream.")
         } catch (e: Exception) {
             Log.e("FinalScreenActivity", "Excepción al guardar la imagen: ${e.message}")
+        }
+    }
+
+    private fun addCoins(user: FirebaseUser?, score: String){
+        val newScore: Int? = score.toIntOrNull()
+        when {
+            newScore != null && newScore >= 80 -> {
+                firebaseManager.addCoins(user)
+            }
         }
     }
 

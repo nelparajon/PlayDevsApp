@@ -12,6 +12,8 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.MutableData
+import com.google.firebase.database.Transaction
 import com.google.firebase.database.ValueEventListener
 
 class FirebaseManager(private val context: Context) {
@@ -34,7 +36,7 @@ class FirebaseManager(private val context: Context) {
     //configuramos las opciones de Google Sign-In y creamos una instancia de GoogleSignInClient.
     private fun setupGoogleSignIn() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(context.getString(com.playdevsgame.R.string.default_web_client_id))
+            .requestIdToken(context.getString(R.string.default_web_client_id))
             .requestEmail()
             //.setAccountName(null) // Agregar esta línea para mostrar el selector de cuentas
             .build()
@@ -102,12 +104,11 @@ class FirebaseManager(private val context: Context) {
         }
     }
 
-    fun updateHighScoreInFirebase(userId: String, updateScore: String) {
-        // Codificar el correo electrónico para usarlo como clave en Firebase
-
+    //actualiza el record en el nodo records para el usuario autenticado
+    fun updateHighScoreInFirebase(user: FirebaseUser?, updateScore: String) {
 
         // Crear la referencia a la ubicación del score en la base de datos
-        val databaseReference = database.getReference("records").child(userId).child("record")
+        val databaseReference = database.getReference("records").child(user!!.uid).child("record")
 
         // Actualizar el valor del score en la base de datos
         databaseReference.setValue(updateScore)
@@ -119,11 +120,86 @@ class FirebaseManager(private val context: Context) {
             }
     }
 
+    //añade una nueva score al nodo scores para el usuario autenticado
+    fun addScoreToFirebase(user: FirebaseUser?, newScore: String) {
+        user?.let {
+            val scoreRef = FirebaseDatabase.getInstance().getReference("scores").child(it.uid)
+
+            // Genera una nueva clave única para la puntuación que se va a añadir
+            val newScoreRef = scoreRef.push()
+
+            // Crear el map con la puntuación
+            val scoreData = mapOf(
+                "score" to newScore
+            )
+
+            // Establece el valor de la nueva puntuación en la referencia generada
+            newScoreRef.setValue(scoreData).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(
+                        "FIREBASE-DATABASE",
+                        "Puntuación añadida correctamente. Clave: ${newScoreRef.key}"
+                    )
+                } else {
+                    Log.e("EXCEPTION-SCORES", "Error al insertar en la bd de Firebase")
+                }
+            }
+        }
+    }
+
+    fun addCoins(user: FirebaseUser?) {
+        user?.let { currentUser ->
+            val coinsRef =
+                FirebaseDatabase.getInstance().getReference("records").child(currentUser.uid)
+                    .child("coins")
+            coinsRef.runTransaction(object : Transaction.Handler {
+                override fun doTransaction(currentData: MutableData): Transaction.Result {
+
+                    val currentCoins = currentData.getValue(Int::class.java) ?: 0
+                    currentData.value = currentCoins + 1
+                    return Transaction.success(currentData)
+
+                }
+                override fun onComplete(error: DatabaseError?, committed: Boolean, currentData: DataSnapshot?) {
+                    if (committed) {
+                        Log.d("Firebase", "Coins incrementadas con éxito")
+                    } else {
+                        Log.e("Firebase", "Error al incrementar las coins", error?.toException())
+                    }
+                }
+            })
+        }
+    }
+
+    /*fun getTop3Ranking(){
+        val firebaseDatabase = FirebaseDatabase.getInstance()
+        val recordsRef = firebaseDatabase.getReference("records")
+        var records: MutableList<Record> = mutableListOf()
+
+        recordsRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                 // Limpiamos la lista antes de llenarla con nuevos datos
+                for (userSnapshot in snapshot.children) {
+                    val name = userSnapshot.child("name").getValue(String::class.java) ?: "Unknown"
+                    val premio = userSnapshot.child("premio").getValue(Int::class.java) ?: 0
+                    val recordValue = userSnapshot.child("record").getValue(String::class.java) ?: "0"
+                    Log.d("RankingActivity", "User: $name, Premio: $premio, Record: $recordValue")
+                    records.add(Record(name, premio, recordValue))  // Añadimos cada puntuación a la lista
+                }
+                // Ordenar la lista de puntuaciones por valores en orden descendente
+                records.sortByDescending { it.record?.toIntOrNull() }
+                val topScores = records.take(3) //funciona como un iterable de 10 elementos
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("RankingActivity", "Error al leer los datos de Firebase", error.toException())
+            }
+        })
+    }*/
 
 
-
-
-    // Método para leer y actualizar el valor de score
+    // Método para leer y actualizar el valor de score si
      fun updateScoreToFirebase(userId: String) {
         val databaseReference = FirebaseDatabase.getInstance().getReference("scores").child(userId)
 
@@ -163,3 +239,4 @@ class FirebaseManager(private val context: Context) {
         auth.signOut()
     }
 }
+

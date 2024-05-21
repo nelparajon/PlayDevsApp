@@ -184,7 +184,7 @@ class GameActivity : AppCompatActivity() {
         updateUIScore(success)
 
 
-        //retrasamos la activación de los dados durante 0,9 segundos
+
         if ((totalRolls - clickCount) > 0) {
             activateBtns()
         }
@@ -377,6 +377,8 @@ class GameActivity : AppCompatActivity() {
         db.close()
     }
 
+
+
     private fun sendNotification(minutes: Long, seconds: Long) {
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -421,10 +423,8 @@ class GameActivity : AppCompatActivity() {
         return String.format("%02d:%02d", minutes, seconds)
     }
 
-
     private fun openFinalScreenActivity() {
         insertScoreInBD(score)
-        databaseHandler.checkGameHistory()
         val intent = Intent(this@GameActivity, FinalScreenActivity::class.java)
         intent.putExtra("EXTRA_SCORE", score) // Variable 'score'
         startActivity(intent)

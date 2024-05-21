@@ -6,10 +6,7 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.database.Cursor
-import android.location.Location
 import android.os.Bundle
-import android.provider.CalendarContract
 import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -30,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var databaseHandler: DatabaseHandler
     private val PERMISSIONS_REQUEST_CODE = 1001 // Código de solicitud de permisos
-    private lateinit var btnRanking : Button
+    private lateinit var btnRanking: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         setupDefaultPlayerName()
 
         // Listar los IDs de los calendarios disponibles
-        listCalendarsId()
+        //listCalendarsId()
     }
 
     private fun setupUI() {
@@ -124,7 +121,7 @@ class MainActivity : AppCompatActivity() {
             )
         } else {
             // Permiso ya concedido, puedes proceder con la funcionalidad que requiere ubicación
-            getLastLocationAndSave()
+            //getLastLocationAndSave()
         }
     }
 
@@ -208,8 +205,9 @@ class MainActivity : AppCompatActivity() {
             PERMISSIONS_REQUEST_CODE
         )
     }
+}
 
-    private fun listCalendarsId() {
+   /* private fun listCalendarsId() {
         // Consultar y mostrar los detalles de todos los calendarios disponibles en el dispositivo
         val contentResolver = getContentResolver()
         val uri = CalendarContract.Calendars.CONTENT_URI
@@ -248,9 +246,9 @@ class MainActivity : AppCompatActivity() {
             }
             cursor.close() // Cierra el cursor después de su uso para liberar recursos
         }
-    }
+    }*/
 
-    override fun onRequestPermissionsResult(
+    /*override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
         grantResults: IntArray
@@ -285,7 +283,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
+    }*/
 
     /*override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -333,7 +331,7 @@ class MainActivity : AppCompatActivity() {
 }
 =======
 */
-    private fun getLastLocationAndSave() {
+    /*private fun getLastLocationAndSave() {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -358,4 +356,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-}
+}*/
